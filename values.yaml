@@ -1,0 +1,24 @@
+replicaCount: 1
+
+image:
+  repository: ""
+  tag: ""
+  pullPolicy: IfNotPresent
+
+service:
+  port: 8585
+
+config:
+  agentId: "" # Agent identifier that will be assigned to an ingestion pipeline
+  argoExtraEnvs: [] # Extra environment variables for the Ingestion containers
+  ingestionImage: "" # The Collate image for Argo Workflows, including the tag
+  authToken: "" # The token used to authenticate with the Collate server 
+  serverUrl: "https://my-cluster.getcollate.io" # The URL of the Collate server
+  reconnectDelaySeconds: "5" # The delay between reconnection attempts
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  automount: true
