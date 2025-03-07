@@ -43,18 +43,86 @@ spec:
               value: "{{ .Values.config.agentId }}"
             - name: PIPELINE_SERVICE_CLIENT_ENDPOINT
               value: "{{ .Values.config.pipelineServiceClientEndpoint }}"
-            - name: ARGO_TOKEN
-              value: "{{ .Values.config.argoToken }}"
-            - name: ARGO_EXTRA_ENVS
-              value: '[{{ join "," .Values.config.argoExtraEnvs }}]'
-            - name: ARGO_INGESTION_IMAGE
-              value: "{{ .Values.config.ingestionImage }}"
             - name: AUTH_TOKEN
               value: "{{ .Values.config.authToken }}"
             - name: SERVER_URL
               value: "{{ .Values.config.serverUrl }}"
             - name: RECONNECT_DELAY_SECONDS
               value: "{{ .Values.config.reconnectDelaySeconds }}"
+            - name: ARGO_TOKEN
+              value: "{{ .Values.pipelineServiceClientConfiguration.token }}"
+            - name: ARGO_NAMESPACE
+              value: "{{ .Values.pipelineServiceClientConfiguration.namespace }}"
+            - name: ARGO_INGESTION_IMAGE
+              value: "{{ .Values.pipelineServiceClientConfiguration.baseImage }}"
+            {{- if .Values.pipelineServiceClientConfiguration.disableVersionValidation }}
+            - name: ARGO_DISABLE_VERSION_VALIDATION
+              value: "{{ .Values.pipelineServiceClientConfiguration.disableVersionValidation }}"
+            {{- end }}
+            {{- if .Values.pipelineServiceClientConfiguration.backoffTime }}
+            - name: ARGO_TEST_CONNECTION_BACKOFF_TIME
+              value: "{{ .Values.pipelineServiceClientConfiguration.backoffTime }}"
+            {{- end }}
+            {{- if .Values.pipelineServiceClientConfiguration.serviceAccountName }}
+            - name: ARGO_WORKFLOW_EXECUTOR_SERVICE_ACCOUNT_NAME
+              value: "{{ .Values.pipelineServiceClientConfiguration.serviceAccountName }}"
+            {{- end }}
+            {{- if .Values.pipelineServiceClientConfiguration.customerToleration }}
+            - name: ARGO_WORKFLOW_CUSTOMER_TOLERATION
+              value: "{{ .Values.pipelineServiceClientConfiguration.customerToleration }}"
+            {{- end }}
+            {{- if .Values.pipelineServiceClientConfiguration.imagePullSecrets }}
+            - name: ARGO_IMAGE_PULL_SECRETS
+              value: "{{ .Values.pipelineServiceClientConfiguration.imagePullSecrets }}"
+            {{- end }}
+            {{- if .Values.pipelineServiceClientConfiguration.certificatePath }}
+            - name: ARGO_SERVER_CERTIFICATE_PATH
+              value: "{{ .Values.pipelineServiceClientConfiguration.certificatePath }}"
+            {{- end }}
+            {{- if .Values.pipelineServiceClientConfiguration.automountSAToken }}
+            - name: ARGO_AUTOMOUNT_SA_TOKEN
+              value: "{{ .Values.pipelineServiceClientConfiguration.automountSAToken }}"
+            {{- end }}
+            {{- if .Values.pipelineServiceClientConfiguration.secondsAfterCompletionTTL }}
+            - name: ARGO_SECONDS_AFTER_COMPLETION_TTL
+              value: "{{ .Values.pipelineServiceClientConfiguration.secondsAfterCompletionTTL }}"
+            {{- end }}
+            {{- if .Values.pipelineServiceClientConfiguration.resources.limits.cpu }}
+            - name: ARGO_WORKFLOW_CPU_LIMIT
+              value: "{{ .Values.pipelineServiceClientConfiguration.resources.limits.cpu }}"
+            {{- end }}
+            {{- if .Values.pipelineServiceClientConfiguration.resources.limits.memory }}
+            - name: ARGO_WORKFLOW_MEMORY_LIMIT
+              value: "{{ .Values.pipelineServiceClientConfiguration.resources.limits.memory }}"
+            {{- end }}
+            {{- if .Values.pipelineServiceClientConfiguration.resources.requests.cpu }}
+            - name: ARGO_WORKFLOW_CPU_REQUEST
+              value: "{{ .Values.pipelineServiceClientConfiguration.resources.requests.cpu }}"
+            {{- end }}
+            {{- if .Values.pipelineServiceClientConfiguration.resources.requests.memory }}
+            - name: ARGO_WORKFLOW_MEMORY_REQUEST
+              value: "{{ .Values.pipelineServiceClientConfiguration.resources.requests.memory }}"
+            {{- end }}
+            {{- if .Values.pipelineServiceClientConfiguration.automationResources.limits.cpu }}
+            - name: ARGO_AUTOMATION_WORKFLOW_CPU_LIMIT
+              value: "{{ .Values.pipelineServiceClientConfiguration.automationResources.limits.cpu }}"
+            {{- end }}
+            {{- if .Values.pipelineServiceClientConfiguration.automationResources.limits.memory }}
+            - name: ARGO_AUTOMATION_WORKFLOW_MEMORY_LIMIT
+              value: "{{ .Values.pipelineServiceClientConfiguration.automationResources.limits.memory }}"
+            {{- end }}
+            {{- if .Values.pipelineServiceClientConfiguration.automationResources.requests.cpu }}
+            - name: ARGO_AUTOMATION_WORKFLOW_CPU_REQUEST
+              value: "{{ .Values.pipelineServiceClientConfiguration.automationResources.requests.cpu }}"
+            {{- end }}
+            {{- if .Values.pipelineServiceClientConfiguration.automationResources.requests.memory }}
+            - name: ARGO_AUTOMATION_WORKFLOW_MEMORY_REQUEST
+              value: "{{ .Values.pipelineServiceClientConfiguration.automationResources.requests.memory }}"
+            {{- end }}
+            {{- if .Values.pipelineServiceClientConfiguration.argoExtraEnvs }}
+            - name: ARGO_EXTRA_ENVS
+              value: '[{{ join "," .Values.pipelineServiceClientConfiguration.extraEnvs }}]'
+            {{- end }}
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
           readinessProbe:
