@@ -1,3 +1,4 @@
+---
 replicaCount: 1
 
 image:
@@ -5,16 +6,21 @@ image:
   tag: ""
   pullPolicy: IfNotPresent
 
+imagePullSecrets:
+  - name: ""
+
 service:
   port: 8585
 
 config:
-  agentId: "" # Agent identifier that will be assigned to an ingestion pipeline
-  argoExtraEnvs: [] # Extra environment variables for the Ingestion containers
-  ingestionImage: "" # The Collate image for Argo Workflows, including the tag
-  authToken: "" # The token used to authenticate with the Collate server 
-  serverUrl: "https://my-cluster.getcollate.io" # The URL of the Collate server
-  reconnectDelaySeconds: "5" # The delay between reconnection attempts
+  agentId: ""                                    # Agent identifier that will be assigned to an ingestion pipeline
+  pipelineServiceClientEndpoint: ""              # The host of the Argo Workflows server
+  argoToken: ""                                  # The token used to authenticate with the Argo Workflows server
+  argoExtraEnvs: []                              # Extra environment variables for the Ingestion containers
+  ingestionImage: ""                             # The Collate image for Argo Workflows, including the tag
+  authToken: ""                                  # The token used to authenticate with the Collate server
+  serverUrl: "https://my-cluster.getcollate.io"  # The URL of the Collate server
+  reconnectDelaySeconds: "5"                     # The delay between reconnection attempts
 
 serviceAccount:
   # Specifies whether a service account should be created

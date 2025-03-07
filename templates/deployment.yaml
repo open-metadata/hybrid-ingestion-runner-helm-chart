@@ -41,6 +41,10 @@ spec:
           env:
             - name: AGENT_ID
               value: "{{ .Values.config.agentId }}"
+            - name: PIPELINE_SERVICE_CLIENT_ENDPOINT
+              value: "{{ .Values.config.pipelineServiceClientEndpoint }}"
+            - name: ARGO_TOKEN
+              value: "{{ .Values.config.argoToken }}"
             - name: ARGO_EXTRA_ENVS
               value: '[{{ join "," .Values.config.argoExtraEnvs }}]'
             - name: ARGO_INGESTION_IMAGE

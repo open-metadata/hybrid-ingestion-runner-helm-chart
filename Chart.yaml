@@ -1,3 +1,4 @@
+---
 apiVersion: v2
 name: hybrid-ingestion-agent
 description: Helm chart to deploy the Hybrid Ingestion Agent on Kubernetes
@@ -22,3 +23,9 @@ version: 0.1.0
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
 appVersion: "1.6.0"
+
+maintainers:
+  - name: OpenMetadata
+    email: support@open-metadata.org
+
+icon: https://open-metadata.org/assets/favicon.png
