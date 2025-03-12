@@ -6,6 +6,18 @@ Expand the name of the chart.
 {{- end }}
 
 {{/*
+Expand the namespace.
+*/}}
+{{- define "hybrid-ingestion-agent.namespace" -}}
+{{- if .Values.namespaceOverride }}
+{{- .Values.namespaceOverride | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- $namespace := .Release.Namespace }}
+{{- $namespace | trunc 63 | trimSuffix "-" }}
+{{- end }}
+{{- end }}
+
+{{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.

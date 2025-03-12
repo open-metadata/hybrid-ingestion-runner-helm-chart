@@ -29,7 +29,7 @@ serviceAccount:
 pipelineServiceClientConfiguration:
   # The token used to authenticate with the Argo Workflows server, e.g., eyJhbGciOiJSUzI1NiIsImtpZCI6IjlyQTZ4S3...
   token: ""
-  namespace: ".Release.Namespace"
+  namespace: "{{ include \"hybrid-ingestion-agent.namespace\" . }}"
   baseImage: "openmetadata/ingestion-base:1.6.0"
   disableVersionValidation: ""
   # backoff retry time in seconds to test the connection
