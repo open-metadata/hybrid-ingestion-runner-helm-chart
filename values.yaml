@@ -6,6 +6,7 @@ image:
   tag: ""
   pullPolicy: IfNotPresent
 
+# Image Pull Secrets https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
 imagePullSecrets:
   - name: ""
 
@@ -14,52 +15,54 @@ service:
 
 config:
   agentId: ""                                    # Agent identifier that will be assigned to an ingestion pipeline
-  pipelineServiceClientEndpoint: ""              # The host of the Argo Workflows server
   authToken: ""                                  # The token used to authenticate with the Collate server
-  serverUrl: "https://my-cluster.getcollate.io"  # The URL of the Collate server
+  serverUrl: "wss://my-cluster.getcollate.io"  # The URL of the Collate server
   reconnectDelaySeconds: "5"                     # The delay between reconnection attempts
-
+  # The following section applies for Argo Workflows configuration
+  ingestionPods:
+    # Ingestion Pods' namespace default value is the Helm Chart namespace
+    # namespace: "{{ include \"hybrid-ingestion-agent.namespace\" . }}"
+    baseImage: "openmetadata/ingestion-base:1.6.0"
+    disableVersionValidation: ""
+    # https://argoproj.github.io/argo-workflows/service-accounts/
+    serviceAccountName: ""
+    customerToleration: ""
+    # Image Pull Secrets for the baseImage (comma separated string) https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
+    imagePullSecrets: []
+    # If `false`, we will disable the Service Account automount and pass it by hand (argo workflows internally will handle this)
+    autoMountSAToken: ""
+    # Resources configuration
+    resources:
+      limits:
+        cpu:  "1000m"
+        memory: "4096Mi"
+      requests:
+        cpu: "200m"
+        memory: "256Mi"
+    # Automation Workflow Resources configuration
+    automationResources:
+      limits:
+        cpu: "500m"
+        memory: "512Mi"
+      requests:
+        cpu: "200m"
+        memory: "256Mi"
+    # Pass any extra environment variables to the running pods, as `[key1:value1,key2:value2,...]`
+    extraEnvs: ""
+  argoWorkflows:
+    # The endpoint (host:port) of the Argo Workflows server
+    endpoint: ""
+    # The token used to authenticate with the Argo Workflows server, e.g., eyJhbGciOiJSUzI1NiIsImtpZCI6IjlyQTZ4S3...
+    argoToken: ""
+    # backoff retry time in seconds to test the connection
+    backOffTime: ""
+    # SSL to connect to the Argo Server
+    certificatePath: ""
+    # Delete the workflows after #seconds. By default, we'll keep workflows for 1 week
+    secondsAfterCompletionTTL: ""
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
   # Annotations to add to the service account
   annotations: {}
   automount: true
-
-pipelineServiceClientConfiguration:
-  # The token used to authenticate with the Argo Workflows server, e.g., eyJhbGciOiJSUzI1NiIsImtpZCI6IjlyQTZ4S3...
-  token: ""
-  namespace: "{{ include \"hybrid-ingestion-agent.namespace\" . }}"
-  baseImage: "openmetadata/ingestion-base:1.6.0"
-  disableVersionValidation: ""
-  # backoff retry time in seconds to test the connection
-  backOffTime: ""
-  # https://argoproj.github.io/argo-workflows/service-accounts/
-  serviceAccountName: ""
-  customerToleration: ""
-  # Image Pull Secrets https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
-  imagePullSecrets: ""
-  # SSL to connect to the Argo Server
-  certificatePath: ""
-  # If `false`, we will disable the Service Account automount and pass it by hand (argo workflows internally will handle this)
-  autoMountSAToken: ""
-  # Delete the workflows after #seconds. By default, we'll keep workflows for 1 week
-  secondsAfterCompletionTTL: ""
-  # Resources configuration
-  resources:
-    limits:
-      cpu:  "1000m"
-      memory: "4096Mi"
-    requests:
-      cpu: "200m"
-      memory: "256Mi"
-  # Automation Workflow Resources configuration
-  automationResources:
-    limits:
-      cpu: "500m"
-      memory: "512Mi"
-    requests:
-      cpu: "200m"
-      memory: "256Mi"
-  # Pass any extra environment variables to the running pods, as `[key1:value1,key2:value2,...]`
-  extraEnvs: ${ARGO_EXTRA_ENVS:-[]}
