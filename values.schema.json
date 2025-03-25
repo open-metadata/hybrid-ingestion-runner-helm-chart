@@ -1,0 +1,130 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object",
+  "properties": {
+    "replicaCount": {
+      "type": "integer",
+      "default": 1
+    },
+    "image": {
+      "type": "object",
+      "properties": {
+        "repository": { "type": "string" },
+        "tag": { "type": "string" },
+        "pullPolicy": {
+          "type": "string",
+          "enum": ["Always", "IfNotPresent", "Never"],
+          "default": "IfNotPresent"
+        }
+      },
+      "required": ["repository", "tag", "pullPolicy"]
+    },
+    "imagePullSecrets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" }
+        },
+        "required": ["name"]
+      }
+    },
+    "service": {
+      "type": "object",
+      "properties": {
+        "port": { "type": "integer", "default": 8585 }
+      },
+      "required": ["port"]
+    },
+    "config": {
+      "type": "object",
+      "properties": {
+        "agentId": { "type": "string" },
+        "authToken": { "type": "string" },
+        "serverUrl": { "type": "string", "default": "wss://my-cluster.getcollate.io" },
+        "reconnectDelaySeconds": { "type": "string", "default": "5" },
+        "ingestionPods": {
+          "type": "object",
+          "properties": {
+            "baseImage": { "type": "string", "default": "openmetadata/ingestion-base:1.6.0" },
+            "disableVersionValidation": { "type": "string" },
+            "serviceAccountName": { "type": "string" },
+            "customerToleration": { "type": "string" },
+            "imagePullSecrets": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "autoMountSAToken": { "type": "string" },
+            "resources": {
+              "type": "object",
+              "properties": {
+                "limits": {
+                  "type": "object",
+                  "properties": {
+                    "cpu": { "type": "string", "default": "1000m" },
+                    "memory": { "type": "string", "default": "4096Mi" }
+                  },
+                  "required": ["cpu", "memory"]
+                },
+                "requests": {
+                  "type": "object",
+                  "properties": {
+                    "cpu": { "type": "string", "default": "200m" },
+                    "memory": { "type": "string", "default": "256Mi" }
+                  },
+                  "required": ["cpu", "memory"]
+                }
+              }
+            },
+            "automationResources": {
+              "type": "object",
+              "properties": {
+                "limits": {
+                  "type": "object",
+                  "properties": {
+                    "cpu": { "type": "string", "default": "500m" },
+                    "memory": { "type": "string", "default": "512Mi" }
+                  },
+                  "required": ["cpu", "memory"]
+                },
+                "requests": {
+                  "type": "object",
+                  "properties": {
+                    "cpu": { "type": "string", "default": "200m" },
+                    "memory": { "type": "string", "default": "256Mi" }
+                  },
+                  "required": ["cpu", "memory"]
+                }
+              }
+            },
+            "extraEnvs": { "type": "string" }
+          }
+        },
+        "argoWorkflows": {
+          "type": "object",
+          "properties": {
+            "endpoint": { "type": "string" },
+            "argoToken": { "type": "string" },
+            "backOffTime": { "type": "string" },
+            "certificatePath": { "type": "string" },
+            "secondsAfterCompletionTTL": { "type": "string" }
+          }
+        }
+      },
+      "required": ["agentId", "authToken", "serverUrl", "reconnectDelaySeconds"]
+    },
+    "serviceAccount": {
+      "type": "object",
+      "properties": {
+        "create": { "type": "boolean", "default": true },
+        "annotations": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "automount": { "type": "boolean", "default": true }
+      },
+      "required": ["create", "automount"]
+    }
+  },
+  "required": ["replicaCount", "image", "imagePullSecrets", "service", "config", "serviceAccount"]
+}
