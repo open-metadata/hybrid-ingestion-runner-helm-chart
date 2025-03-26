@@ -1,0 +1,18 @@
+apiVersion: v1
+entries:
+  hybrid-ingestion-agent:
+  - apiVersion: v2
+    appVersion: 1.6.0-SNAPSHOT
+    created: "2025-03-26T11:10:40.56712281Z"
+    description: Helm chart to deploy the Hybrid Ingestion Agent on Kubernetes
+    digest: 2241a8216e21bf9cf9b594a465243cdb3965ea5721e456aa46bfe74384980fe6
+    icon: https://open-metadata.org/assets/favicon.png
+    maintainers:
+    - email: support@open-metadata.org
+      name: OpenMetadata
+    name: hybrid-ingestion-agent
+    type: application
+    urls:
+    - https://github.com/open-metadata/hybrid-ingestion-agent-helm-chart/releases/download/hybrid-ingestion-agent-1.6.0-SNAPSHOT/hybrid-ingestion-agent-1.6.0-SNAPSHOT.tgz
+    version: 1.6.0-SNAPSHOT
+generated: "2025-03-26T11:10:40.56712811Z"
