@@ -28,7 +28,7 @@ config:
     serviceAccountName: ""
     customerToleration: ""
     # Image Pull Secrets for the baseImage (comma separated string) https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
-    imagePullSecrets: []
+    imagePullSecrets: ""
     # If `false`, we will disable the Service Account automount and pass it by hand (argo workflows internally will handle this)
     autoMountSAToken: ""
     # Resources configuration
@@ -48,7 +48,7 @@ config:
         cpu: "200m"
         memory: "256Mi"
     # Pass any extra environment variables to the running pods, as `[key1:value1,key2:value2,...]`
-    extraEnvs: ""
+    extraEnvs: []
   argoWorkflows:
     # The endpoint (host:port) of the Argo Workflows server
     endpoint: ""

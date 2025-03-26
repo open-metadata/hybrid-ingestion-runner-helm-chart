@@ -47,13 +47,10 @@
           "type": "object",
           "properties": {
             "baseImage": { "type": "string", "default": "openmetadata/ingestion-base:1.6.0" },
-            "disableVersionValidation": { "type": "string" },
+            "disableVersionValidation": { "type": "boolean" },
             "serviceAccountName": { "type": "string" },
             "customerToleration": { "type": "string" },
-            "imagePullSecrets": {
-              "type": "array",
-              "items": { "type": "string" }
-            },
+            "imagePullSecrets": { "type": "string" },
             "autoMountSAToken": { "type": "string" },
             "resources": {
               "type": "object",
@@ -93,7 +90,7 @@
                 }
               }
             },
-            "extraEnvs": { "type": "string" }
+            "extraEnvs": { "type": "array" }
           }
         },
         "argoWorkflows": {
@@ -103,7 +100,7 @@
             "argoToken": { "type": "string" },
             "backOffTime": { "type": "string" },
             "certificatePath": { "type": "string" },
-            "secondsAfterCompletionTTL": { "type": "string" }
+            "secondsAfterCompletionTTL": { "type": "integer" }
           }
         }
       },
