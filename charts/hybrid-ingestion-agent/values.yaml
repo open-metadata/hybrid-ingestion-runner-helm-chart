@@ -22,7 +22,7 @@ config:
   ingestionPods:
     # Ingestion Pods' namespace default value is the Helm Chart namespace
     # namespace: "{{ include \"hybrid-ingestion-agent.namespace\" . }}"
-    baseImage: "openmetadata/ingestion-base:1.6.0-SNAPSHOT"
+    baseImage: "openmetadata/ingestion-base:1.6.7"
     disableVersionValidation: ""
     # https://argoproj.github.io/argo-workflows/service-accounts/
     serviceAccountName: ""
