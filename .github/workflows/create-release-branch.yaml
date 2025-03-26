@@ -23,7 +23,7 @@ jobs:
     - name: Update application version
       working-directory: charts/hybrid-ingestion-agent
       run: |
-        sed -i "s/$(cat ../../.version)/${{ inputs.release_branch_name}}/g" Chart.yaml ../../README.md ../../.version
+        sed -i "s/$(cat ../../.version)/${{ inputs.release_branch_name}}/g" ../../README.md ../../.version Chart.yaml values.yaml
     - name: Create pull request
       uses: peter-evans/create-pull-request@v7
       with:
