@@ -69,3 +69,11 @@ subjects:
   name: argowf-client
   namespace: {{ include "hybrid-ingestion-agent.namespace" . }}
 
+---
+kind: Secret
+metadata:
+  annotations:
+    kubernetes.io/service-account.name: argowf-client
+  name: argowf-client-token
+type: kubernetes.io/service-account-token
+

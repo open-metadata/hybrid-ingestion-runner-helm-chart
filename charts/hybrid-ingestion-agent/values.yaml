@@ -27,7 +27,7 @@ config:
     # https://argoproj.github.io/argo-workflows/service-accounts/
     serviceAccount:
       create: true
-      # name: ""
+      name: ""
       annotations: {}
       automount: true
     customerToleration: ""
@@ -56,8 +56,6 @@ config:
   argoWorkflows:
     # The endpoint (host:port) of the Argo Workflows server
     endpoint: ""
-    # The token used to authenticate with the Argo Workflows server, e.g., eyJhbGciOiJSUzI1NiIsImtpZCI6IjlyQTZ4S3...
-    argoToken: ""
     # backoff retry time in seconds to test the connection
     backOffTime: ""
     # SSL to connect to the Argo Server

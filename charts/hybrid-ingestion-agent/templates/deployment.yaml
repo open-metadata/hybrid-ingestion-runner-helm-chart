@@ -39,6 +39,8 @@ spec:
               containerPort: 8585
               protocol: TCP
           env:
+            - name: ARGO_WORKFLOW_EXECUTOR_SERVICE_ACCOUNT_NAME
+              value: {{ include "hybrid-ingestion-agent.ingestionServiceAccountName" . }}
             {{- with .Values.config }}
             - name: AGENT_ID
               value: "{{ .agentId }}"
@@ -49,92 +51,61 @@ spec:
             - name: RECONNECT_DELAY_SECONDS
               value: "{{ .reconnectDelaySeconds }}"
             {{- with .ingestionPods }}
-            {{- with .namespace }}
             - name: ARGO_NAMESPACE
-              value: "{{ . }}"
-            {{- end }}
+              value: "{{ .namespace }}"
             - name: ARGO_INGESTION_IMAGE
               value: "{{ .baseImage }}"
             {{- if .disableVersionValidation }}
             - name: ARGO_DISABLE_VERSION_VALIDATION
               value: "{{ .disableVersionValidation }}"
             {{- end }}
-            - name: ARGO_WORKFLOW_EXECUTOR_SERVICE_ACCOUNT_NAME
-              value: {{ include "hybrid-ingestion-agent.ingestionServiceAccountName" . }}
-            {{- with .customerToleration }}
             - name: ARGO_WORKFLOW_CUSTOMER_TOLERATION
-              value: "{{ . }}"
-            {{- end }}
-            {{- with .imagePullSecrets }}
+              value: "{{ .customerToleration }}"
             - name: ARGO_IMAGE_PULL_SECRETS
-              value: "{{ . }}"
-            {{- end }}
-            {{- with .automountSAToken }}
+              value: "{{ .imagePullSecrets }}"
             - name: ARGO_AUTOMOUNT_SA_TOKEN
-              value: "{{ . }}"
-            {{- end }}
-            {{- with .extraEnvs }}
+              value: "{{ .automountSAToken }}"
             - name: ARGO_EXTRA_ENVS
-              value: '[{{ join "," . }}]'
-            {{- end }}
+              value: '[{{ join "," .extraEnvs }}]'
             {{- with .resources.limits }}
-            {{- with .cpu }}
             - name: ARGO_WORKFLOW_CPU_LIMIT
-              value: "{{ . }}"
-            {{- end }}
-            {{- with .memory }}
+              value: "{{ .cpu }}"
             - name: ARGO_WORKFLOW_MEMORY_LIMIT
-              value: "{{ . }}"
-            {{- end }}
+              value: "{{ .memory }}"
             {{- end }}
             {{- with .resources.requests }}
-            {{- with .cpu }}
             - name: ARGO_WORKFLOW_CPU_REQUEST
-              value: "{{ . }}"
-            {{- end }}
-            {{- with .memory }}
+              value: "{{ .cpu }}"
             - name: ARGO_WORKFLOW_MEMORY_REQUEST
-              value: "{{ . }}"
-            {{- end }}
+              value: "{{ .memory }}"
             {{- end }}
             {{- with .automationResources.limits }}
-            {{- with .cpu }}
             - name: ARGO_AUTOMATION_WORKFLOW_CPU_LIMIT
-              value: "{{ . }}"
-            {{- end }}
-            {{- with .memory }}
+              value: "{{ .cpu }}"
             - name: ARGO_AUTOMATION_WORKFLOW_MEMORY_LIMIT
-              value: "{{ . }}"
-            {{- end }}
+              value: "{{ .memory }}"
             {{- end }}
             {{- with .automationResources.requests }}
-            {{- with .cpu }}
             - name: ARGO_AUTOMATION_WORKFLOW_CPU_REQUEST
-              value: "{{ . }}"
-            {{- end }}
-            {{- with .memory }}
+              value: "{{ .cpu }}"
             - name: ARGO_AUTOMATION_WORKFLOW_MEMORY_REQUEST
-              value: "{{ . }}"
-            {{- end }}
+              value: "{{ .memory }}"
             {{- end }}
             {{- end }}
             {{- with .argoWorkflows }}
             - name: PIPELINE_SERVICE_CLIENT_ENDPOINT
               value: "{{ .endpoint }}"
             - name: ARGO_TOKEN
-              value: "{{ .argoToken }}"
-            {{- with .secondsAfterCompletionTTL }}
+              valueFrom:
+                secretKeyRef:
+                  name: argowf-client-token
+                  key: token
             - name: ARGO_SECONDS_AFTER_COMPLETION_TTL
-              value: "{{ . }}"
-            {{- end }}
-            {{- with .certificatePath }}
+              value: "{{ .secondsAfterCompletionTTL }}"
             - name: ARGO_SERVER_CERTIFICATE_PATH
-              value: "{{ . }}"            
-            {{- end}}
-            {{- with .backoffTime }}
+              value: "{{ .certificatePath }}"
             - name: ARGO_TEST_CONNECTION_BACKOFF_TIME
-              value: "{{ . }}"
-            {{- end }}
+              value: "{{ .backoffTime }}"
             {{- end }}
             {{- end }}        
           livenessProbe:

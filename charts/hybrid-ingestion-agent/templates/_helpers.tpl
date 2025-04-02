@@ -30,7 +30,7 @@ If release name contains chart name it will be used as a full name.
 {{- if contains $name .Release.Name }}
 {{- .Release.Name | trunc 63 | trimSuffix "-" }}
 {{- else }}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
+{{- printf "%s" $name | trunc 63 | trimSuffix "-" }}
 {{- end }}
 {{- end }}
 {{- end }}
@@ -78,7 +78,7 @@ Create the name of the service account to use by the Ingestion pods
 */}}
 {{- define "hybrid-ingestion-agent.ingestionServiceAccountName" -}}
 {{- if .Values.config.ingestionPods.serviceAccount.create }}
-{{- default (include "hybrid-ingestion-agent.fullname" .) "-ingestion" .Values.config.ingestionPods.serviceAccount.name }}
+{{- default (printf "%s-ingestion" (include "hybrid-ingestion-agent.fullname" .)) .Values.config.ingestionPods.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.config.ingestionPods.serviceAccount.name }}
 {{- end }}

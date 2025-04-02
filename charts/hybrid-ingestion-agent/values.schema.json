@@ -108,7 +108,6 @@
           "type": "object",
           "properties": {
             "endpoint": { "type": "string" },
-            "argoToken": { "type": "string" },
             "backOffTime": { "type": "string" },
             "certificatePath": { "type": "string" },
             "secondsAfterCompletionTTL": { "type": "integer" }
