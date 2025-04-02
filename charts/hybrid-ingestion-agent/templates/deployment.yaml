@@ -59,10 +59,8 @@ spec:
             - name: ARGO_DISABLE_VERSION_VALIDATION
               value: "{{ .disableVersionValidation }}"
             {{- end }}
-            {{- with .serviceAccountName }}
             - name: ARGO_WORKFLOW_EXECUTOR_SERVICE_ACCOUNT_NAME
-              value: "{{ . }}"
-            {{- end }}
+              value: {{ include "hybrid-ingestion-agent.ingestionServiceAccountName" . }}
             {{- with .customerToleration }}
             - name: ARGO_WORKFLOW_CUSTOMER_TOLERATION
               value: "{{ . }}"

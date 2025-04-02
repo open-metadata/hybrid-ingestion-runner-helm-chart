@@ -1,0 +1,71 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: argowf-client 
+  labels:
+    {{- include "hybrid-ingestion-agent.labels" . | nindent 4 }}
+automountServiceAccountToken: false
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: argowf-client
+rules:
+- apiGroups:
+  - argoproj.io
+  resources:
+  - workflows
+  verbs:
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - get
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - pods/log
+  - pods
+  verbs:
+  - list
+  - watch
+  - patch
+  - get
+- apiGroups:
+  - argoproj.io
+  resources:
+  - cronworkflows
+  verbs:
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - get
+  - delete
+- apiGroups:
+  - argoproj.io
+  resources:
+  - workflowtaskresults
+  verbs:
+  - create
+  - patch
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: argowf-client
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: argowf-client
+subjects:
+- kind: ServiceAccount
+  name: argowf-client
+  namespace: {{ include "hybrid-ingestion-agent.namespace" . }}
+
