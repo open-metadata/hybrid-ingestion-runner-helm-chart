@@ -46,9 +46,20 @@
         "ingestionPods": {
           "type": "object",
           "properties": {
-            "baseImage": { "type": "string", "default": "openmetadata/ingestion-base:1.6.0" },
+            "baseImage": { "type": "string", "default": "openmetadata/ingestion-base:1.6.0-SNAPSHOT" },
             "disableVersionValidation": { "type": "boolean" },
-            "serviceAccountName": { "type": "string" },
+            "serviceAccount": {
+              "type": "object",
+              "properties": {
+                "create": { "type": "boolean", "default": true },
+                "annotations": {
+                  "type": "object",
+                  "additionalProperties": { "type": "string" }
+                },
+                "automount": { "type": "boolean", "default": true }
+              },
+              "required": ["create", "automount"]
+            },
             "customerToleration": { "type": "string" },
             "imagePullSecrets": { "type": "string" },
             "autoMountSAToken": { "type": "string" },
@@ -117,7 +128,22 @@
         "automount": { "type": "boolean", "default": true }
       },
       "required": ["create", "automount"]
+    },
+    "serviceMonitor": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean", "default": false },
+        "interval": { "type": "string", "default": "30s" },
+        "annotations": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      }
     }
   },
-  "required": ["replicaCount", "image", "imagePullSecrets", "service", "config", "serviceAccount"]
+  "required": ["replicaCount", "image", "imagePullSecrets", "service", "config", "serviceAccount", "serviceMonitor"]
 }
