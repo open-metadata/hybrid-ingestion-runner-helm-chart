@@ -52,44 +52,68 @@ spec:
               value: "{{ .reconnectDelaySeconds }}"
             {{- with .ingestionPods }}
             - name: ARGO_NAMESPACE
-              value: "{{ .namespace }}"
+              value: {{ .namespace | default (include "hybrid-ingestion-agent.namespace" $) }}
             - name: ARGO_INGESTION_IMAGE
               value: "{{ .baseImage }}"
             {{- if .disableVersionValidation }}
             - name: ARGO_DISABLE_VERSION_VALIDATION
               value: "{{ .disableVersionValidation }}"
             {{- end }}
+            {{- with .customerToleration }}
             - name: ARGO_WORKFLOW_CUSTOMER_TOLERATION
-              value: "{{ .customerToleration }}"
+              value: "{{ . }}"
+            {{- end }}
+            {{- with .imagePullSecrets }}
             - name: ARGO_IMAGE_PULL_SECRETS
-              value: "{{ .imagePullSecrets }}"
+              value: "{{ . }}"
+            {{- end }}
+            {{- with .automountSAToken }}
             - name: ARGO_AUTOMOUNT_SA_TOKEN
-              value: "{{ .automountSAToken }}"
+              value: "{{ . }}"
+            {{- end }}
+            {{- with .extraEnvs }}
             - name: ARGO_EXTRA_ENVS
-              value: '[{{ join "," .extraEnvs }}]'
+              value: '[{{ join "," . }}]'
+            {{- end }}
             {{- with .resources.limits }}
+            {{- with .cpu }}
             - name: ARGO_WORKFLOW_CPU_LIMIT
-              value: "{{ .cpu }}"
+              value: "{{ . }}"
+            {{- end }}
+            {{- with .memory }}
             - name: ARGO_WORKFLOW_MEMORY_LIMIT
-              value: "{{ .memory }}"
+              value: "{{ . }}"
+            {{- end }}
             {{- end }}
             {{- with .resources.requests }}
+            {{- with .cpu }}
             - name: ARGO_WORKFLOW_CPU_REQUEST
-              value: "{{ .cpu }}"
+              value: "{{ . }}"
+            {{- end }}
+            {{- with .memory }}
             - name: ARGO_WORKFLOW_MEMORY_REQUEST
-              value: "{{ .memory }}"
+              value: "{{ . }}"
+            {{- end }}
             {{- end }}
             {{- with .automationResources.limits }}
+            {{- with .cpu }}
             - name: ARGO_AUTOMATION_WORKFLOW_CPU_LIMIT
-              value: "{{ .cpu }}"
+              value: "{{ . }}"
+            {{- end }}
+            {{- with .memory }}
             - name: ARGO_AUTOMATION_WORKFLOW_MEMORY_LIMIT
-              value: "{{ .memory }}"
+              value: "{{ . }}"
+            {{- end }}
             {{- end }}
             {{- with .automationResources.requests }}
+            {{- with .cpu }}
             - name: ARGO_AUTOMATION_WORKFLOW_CPU_REQUEST
-              value: "{{ .cpu }}"
+              value: "{{ . }}"
+            {{- end }}
+            {{- with .memory }}
             - name: ARGO_AUTOMATION_WORKFLOW_MEMORY_REQUEST
-              value: "{{ .memory }}"
+              value: "{{ . }}"
+            {{- end }}
             {{- end }}
             {{- end }}
             {{- with .argoWorkflows }}
@@ -100,12 +124,18 @@ spec:
                 secretKeyRef:
                   name: argowf-client-token
                   key: token
+            {{- with .secondsAfterCompletionTTL }}
             - name: ARGO_SECONDS_AFTER_COMPLETION_TTL
-              value: "{{ .secondsAfterCompletionTTL }}"
+              value: "{{ . }}"
+            {{- end }}
+            {{- with .certificatePath }}
             - name: ARGO_SERVER_CERTIFICATE_PATH
-              value: "{{ .certificatePath }}"
+              value: "{{ . }}" 
+            {{- end}}
+            {{- with .backoffTime }}
             - name: ARGO_TEST_CONNECTION_BACKOFF_TIME
-              value: "{{ .backoffTime }}"
+              value: "{{ . }}"
+            {{- end }}
             {{- end }}
             {{- end }}        
           livenessProbe:

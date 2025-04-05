@@ -14,27 +14,31 @@ service:
   port: 8585
 
 config:
-  agentId: ""                                    # Agent identifier that will be assigned to an ingestion pipeline
-  authToken: ""                                  # The token used to authenticate with the Collate server
-  serverUrl: "wss://my-cluster.getcollate.io"  # The URL of the Collate server
-  reconnectDelaySeconds: "5"                     # The delay between reconnection attempts
+  # Agent identifier that will be assigned to an ingestion pipeline
+  agentId: ""
+  # The token used to authenticate with the Collate server
+  authToken: ""
+  # The URL of the Collate server
+  serverUrl: "wss://my-cluster.getcollate.io"
+  # The delay between reconnection attempts
+  # reconnectDelaySeconds: "5"
   # The following section applies for Argo Workflows configuration
   ingestionPods:
     # Ingestion Pods' namespace default value is the Helm Chart namespace
-    # namespace: "{{ include \"hybrid-ingestion-agent.namespace\" . }}"
+    # namespace: "another-namespace"
     baseImage: "openmetadata/ingestion-base:1.6.0-SNAPSHOT"
-    disableVersionValidation: ""
+    # disableVersionValidation: ""
     # https://argoproj.github.io/argo-workflows/service-accounts/
     serviceAccount:
       create: true
-      name: ""
-      annotations: {}
-      automount: true
-    customerToleration: ""
+      name: "ingestion"
+      # annotations: {}
+      # automount: true
+    # customerToleration: ""
     # Image Pull Secrets for the baseImage (comma separated string) https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
-    imagePullSecrets: ""
+    # imagePullSecrets: ""
     # If `false`, we will disable the Service Account automount and pass it by hand (argo workflows internally will handle this)
-    autoMountSAToken: ""
+    # autoMountSAToken: ""
     # Resources configuration
     resources:
       limits:
@@ -57,15 +61,13 @@ config:
     # The endpoint (host:port) of the Argo Workflows server
     endpoint: ""
     # backoff retry time in seconds to test the connection
-    backOffTime: ""
+    # backOffTime: ""
     # SSL to connect to the Argo Server
-    certificatePath: ""
+    # certificatePath: ""
     # Delete the workflows after #seconds. By default, we'll keep workflows for 1 week
-    secondsAfterCompletionTTL: ""
+    # secondsAfterCompletionTTL: ""
 serviceAccount:
-  # Specifies whether a service account should be created
   create: true
-  # Annotations to add to the service account
   annotations: {}
   automount: true
 
