@@ -48,8 +48,10 @@ spec:
               value: "{{ .authToken }}"
             - name: SERVER_URL
               value: "{{ .serverUrl }}"
+            {{- with .reconnectDelaySeconds }}
             - name: RECONNECT_DELAY_SECONDS
-              value: "{{ .reconnectDelaySeconds }}"
+              value: "{{ . }}"
+            {{- end }}
             {{- with .ingestionPods }}
             - name: ARGO_NAMESPACE
               value: {{ .namespace | default (include "hybrid-ingestion-agent.namespace" $) }}

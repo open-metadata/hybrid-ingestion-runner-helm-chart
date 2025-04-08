@@ -2,8 +2,8 @@
 replicaCount: 1
 
 image:
-  repository: ""
-  tag: ""
+  repository: "118146679784.dkr.ecr.us-east-2.amazonaws.com/hybrid-ingestion-runner"
+  tag: "1.7.0-SNAPSHOT"
   pullPolicy: IfNotPresent
 
 # Image Pull Secrets https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
@@ -15,7 +15,7 @@ service:
 
 config:
   # Agent identifier that will be assigned to an ingestion pipeline
-  agentId: ""
+  agentId: "RemoteRunner"
   # The token used to authenticate with the Collate server
   authToken: ""
   # The URL of the Collate server
@@ -26,7 +26,7 @@ config:
   ingestionPods:
     # Ingestion Pods' namespace default value is the Helm Chart namespace
     # namespace: "another-namespace"
-    baseImage: "openmetadata/ingestion-base:1.6.0-SNAPSHOT"
+    baseImage: "openmetadata/ingestion-base:1.7.0-rc1"
     # disableVersionValidation: ""
     # https://argoproj.github.io/argo-workflows/service-accounts/
     serviceAccount:

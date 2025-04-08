@@ -70,6 +70,7 @@ subjects:
   namespace: {{ include "hybrid-ingestion-agent.namespace" . }}
 
 ---
+apiVersion: v1
 kind: Secret
 metadata:
   annotations:
