@@ -39,6 +39,8 @@ spec:
               containerPort: 8585
               protocol: TCP
           env:
+            - name: ARGO_WORKFLOW_EXECUTOR_SERVICE_ACCOUNT_NAME
+              value: {{ include "hybrid-ingestion-agent.ingestionServiceAccountName" . }}
             {{- with .Values.config }}
             - name: AGENT_ID
               value: "{{ .agentId }}"
@@ -46,22 +48,18 @@ spec:
               value: "{{ .authToken }}"
             - name: SERVER_URL
               value: "{{ .serverUrl }}"
+            {{- with .reconnectDelaySeconds }}
             - name: RECONNECT_DELAY_SECONDS
-              value: "{{ .reconnectDelaySeconds }}"
-            {{- with .ingestionPods }}
-            {{- with .namespace }}
-            - name: ARGO_NAMESPACE
               value: "{{ . }}"
             {{- end }}
+            {{- with .ingestionPods }}
+            - name: ARGO_NAMESPACE
+              value: {{ .namespace | default (include "hybrid-ingestion-agent.namespace" $) }}
             - name: ARGO_INGESTION_IMAGE
               value: "{{ .baseImage }}"
             {{- if .disableVersionValidation }}
             - name: ARGO_DISABLE_VERSION_VALIDATION
               value: "{{ .disableVersionValidation }}"
-            {{- end }}
-            {{- with .serviceAccountName }}
-            - name: ARGO_WORKFLOW_EXECUTOR_SERVICE_ACCOUNT_NAME
-              value: "{{ . }}"
             {{- end }}
             {{- with .customerToleration }}
             - name: ARGO_WORKFLOW_CUSTOMER_TOLERATION
@@ -124,14 +122,17 @@ spec:
             - name: PIPELINE_SERVICE_CLIENT_ENDPOINT
               value: "{{ .endpoint }}"
             - name: ARGO_TOKEN
-              value: "{{ .argoToken }}"
+              valueFrom:
+                secretKeyRef:
+                  name: argowf-client-token
+                  key: token
             {{- with .secondsAfterCompletionTTL }}
             - name: ARGO_SECONDS_AFTER_COMPLETION_TTL
               value: "{{ . }}"
             {{- end }}
             {{- with .certificatePath }}
             - name: ARGO_SERVER_CERTIFICATE_PATH
-              value: "{{ . }}"            
+              value: "{{ . }}" 
             {{- end}}
             {{- with .backoffTime }}
             - name: ARGO_TEST_CONNECTION_BACKOFF_TIME

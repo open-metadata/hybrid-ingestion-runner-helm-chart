@@ -63,12 +63,23 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
-Create the name of the service account to use
+Create the name of the service account to use by the Hybrid Runner
 */}}
 {{- define "hybrid-ingestion-agent.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
 {{- default (include "hybrid-ingestion-agent.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
+{{- end }}
+{{- end }}
+
+{{/*
+Create the name of the service account to use by the Ingestion pods
+*/}}
+{{- define "hybrid-ingestion-agent.ingestionServiceAccountName" -}}
+{{- if .Values.config.ingestionPods.serviceAccount.create }}
+{{- default (printf "%s-ingestion" (include "hybrid-ingestion-agent.fullname" .)) .Values.config.ingestionPods.serviceAccount.name }}
+{{- else }}
+{{- default "default" .Values.config.ingestionPods.serviceAccount.name }}
 {{- end }}
 {{- end }}
