@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "hybrid-ingestion-agent.fullname" . }}
+  name: {{ include "hybrid-ingestion-runner.fullname" . }}
   labels:
-    {{- include "hybrid-ingestion-agent.labels" . | nindent 4 }}
+    {{- include "hybrid-ingestion-runner.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "hybrid-ingestion-agent.selectorLabels" . | nindent 6 }}
+      {{- include "hybrid-ingestion-runner.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -16,7 +16,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "hybrid-ingestion-agent.labels" . | nindent 8 }}
+        {{- include "hybrid-ingestion-runner.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -25,7 +25,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "hybrid-ingestion-agent.serviceAccountName" . }}
+      serviceAccountName: {{ include "hybrid-ingestion-runner.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -40,7 +40,7 @@ spec:
               protocol: TCP
           env:
             - name: ARGO_WORKFLOW_EXECUTOR_SERVICE_ACCOUNT_NAME
-              value: {{ include "hybrid-ingestion-agent.ingestionServiceAccountName" . }}
+              value: {{ include "hybrid-ingestion-runner.ingestionServiceAccountName" . }}
             {{- with .Values.config }}
             - name: AGENT_ID
               value: "{{ .agentId }}"
@@ -54,7 +54,7 @@ spec:
             {{- end }}
             {{- with .ingestionPods }}
             - name: ARGO_NAMESPACE
-              value: {{ .namespace | default (include "hybrid-ingestion-agent.namespace" $) }}
+              value: {{ .namespace | default (include "hybrid-ingestion-runner.namespace" $) }}
             - name: ARGO_INGESTION_IMAGE
               value: "{{ .baseImage }}"
             {{- if .disableVersionValidation }}

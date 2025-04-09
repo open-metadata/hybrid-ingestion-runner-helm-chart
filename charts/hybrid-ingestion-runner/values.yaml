@@ -14,7 +14,7 @@ service:
   port: 8585
 
 config:
-  # Agent identifier that will be assigned to an ingestion pipeline
+  # Runner identifier that will be assigned to an ingestion pipeline
   agentId: "RemoteRunner"
   # The token used to authenticate with the Collate server
   authToken: ""

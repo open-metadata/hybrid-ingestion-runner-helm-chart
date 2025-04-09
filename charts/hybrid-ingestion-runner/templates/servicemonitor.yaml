@@ -2,9 +2,9 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ include "hybrid-ingestion-agent.fullname" . }}
+  name: {{ include "hybrid-ingestion-runner.fullname" . }}
   labels:
-    {{- include "hybrid-ingestion-agent.labels" . | nindent 4 }}
+    {{- include "hybrid-ingestion-runner.labels" . | nindent 4 }}
     {{- with .Values.serviceMonitor.labels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -15,7 +15,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      {{- include "hybrid-ingestion-agent.selectorLabels" . | nindent 6 }}
+      {{- include "hybrid-ingestion-runner.selectorLabels" . | nindent 6 }}
   endpoints:
     - port: app
       path: /prometheus
