@@ -1,7 +1,7 @@
 ---
 apiVersion: v2
-name: hybrid-ingestion-agent
-description: Helm chart to deploy the Hybrid Ingestion Agent on Kubernetes
+name: hybrid-ingestion-runner
+description: Helm chart to deploy the Collate Hybrid Ingestion Runner on Kubernetes
 
 # A chart can be either an 'application' or a 'library' chart.
 #

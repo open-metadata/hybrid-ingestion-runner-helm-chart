@@ -4,7 +4,7 @@ kind: ServiceAccount
 metadata:
   name: argowf-client 
   labels:
-    {{- include "hybrid-ingestion-agent.labels" . | nindent 4 }}
+    {{- include "hybrid-ingestion-runner.labels" . | nindent 4 }}
 automountServiceAccountToken: false
 
 ---
@@ -67,7 +67,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: argowf-client
-  namespace: {{ include "hybrid-ingestion-agent.namespace" . }}
+  namespace: {{ include "hybrid-ingestion-runner.namespace" . }}
 
 ---
 apiVersion: v1

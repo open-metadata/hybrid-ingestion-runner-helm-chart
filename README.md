@@ -1,1 +1,1 @@
-# hybrid-ingestion-agent-helm-chart
+# hybrid-ingestion-runner-helm-chart
