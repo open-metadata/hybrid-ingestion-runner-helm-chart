@@ -33,7 +33,7 @@ config:
       create: true
       name: "ingestion"
       # annotations: {}
-      # automount: true
+      automount: true
     # customerToleration: ""
     # Image Pull Secrets for the baseImage (comma separated string) https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
     # imagePullSecrets: ""
