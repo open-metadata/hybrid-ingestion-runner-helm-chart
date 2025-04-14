@@ -22,7 +22,8 @@ config:
   serverUrl: "wss://my-cluster.getcollate.io"
   # The URL of the Collate server API
   serverHostApiUrl: "https://my-cluster.getcollate.io/api"
-  # The Secrets Manager
+  # The Secrets Manager to use
+  # secretsManager: "managed-aws" # To use AWS Secrets Manager. This is the only supported option for now.
   secretsManager: ""
   # The delay between reconnection attempts
   # reconnectDelaySeconds: "5"
