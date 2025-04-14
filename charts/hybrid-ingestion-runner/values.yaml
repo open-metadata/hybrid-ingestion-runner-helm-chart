@@ -20,6 +20,8 @@ config:
   authToken: ""
   # The URL of the Collate server
   serverUrl: "wss://my-cluster.getcollate.io"
+  # The URL of the Collate server API
+  serverHostApiUrl: "https://my-cluster.getcollate.io/api"
   # The delay between reconnection attempts
   # reconnectDelaySeconds: "5"
   # The following section applies for Argo Workflows configuration

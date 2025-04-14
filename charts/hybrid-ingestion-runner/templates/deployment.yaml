@@ -48,6 +48,8 @@ spec:
               value: "{{ .authToken }}"
             - name: SERVER_URL
               value: "{{ .serverUrl }}"
+            - name: SERVER_HOST_API_URL
+              value: "{{ .serverHostApiUrl }}"
             {{- with .reconnectDelaySeconds }}
             - name: RECONNECT_DELAY_SECONDS
               value: "{{ . }}"
