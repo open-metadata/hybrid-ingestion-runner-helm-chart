@@ -53,7 +53,7 @@ spec:
             - name: PIPELINE_SERVICE_CLIENT_SECRETS_MANAGER_LOADER
               value: env
             {{- with .secretsManager }}
-            - name SECRETS_MANAGER
+            - name: SECRETS_MANAGER
               value: "{{ . }}"
             {{- end }}
             {{- with .reconnectDelaySeconds }}
