@@ -50,8 +50,6 @@ spec:
               value: "{{ .serverUrl }}"
             - name: SERVER_HOST_API_URL
               value: "{{ .serverHostApiUrl }}"
-            - name: PIPELINE_SERVICE_CLIENT_SECRETS_MANAGER_LOADER
-              value: env
             {{- with .secretsManager }}
             - name: SECRETS_MANAGER
               value: "{{ . }}"
