@@ -11,14 +11,14 @@ Short blurb explaining:
 
 I worked on ... because ...
 
-## Motivation and Context
+## Motivation and context
 <!--- Why is this change required? What problem does it solve? -->
 <!--- If it fixes an open issue, please link to the issue here. -->
 
-## Breaking Changes
+## Breaking changes
 <!-- Does this break backwards compatibility with the current major version? -->
 <!-- If so, please provide an explanation why it is necessary. -->
 
-## How Has This Been Tested?
+## How has this been tested?
 <!--- This will highlight breaking/disruptive changes. Once you have checked, deploy your changes to verify -->
 <!--- Please describe how you tested your changes -->
