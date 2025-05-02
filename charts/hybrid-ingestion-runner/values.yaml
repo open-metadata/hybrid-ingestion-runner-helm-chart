@@ -82,3 +82,9 @@ serviceMonitor:
   interval: 30s
   annotations: {}
   labels: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
