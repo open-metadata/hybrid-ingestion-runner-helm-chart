@@ -3,7 +3,7 @@ replicaCount: 1
 
 image:
   repository: "118146679784.dkr.ecr.us-east-2.amazonaws.com/hybrid-ingestion-runner"
-  tag: "1.7.0-SNAPSHOT"
+  tag: "1.7.0"
   pullPolicy: IfNotPresent
 
 # Image Pull Secrets https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
@@ -31,7 +31,7 @@ config:
   ingestionPods:
     # Ingestion Pods' namespace default value is the Helm Chart namespace
     # namespace: "another-namespace"
-    baseImage: "openmetadata/ingestion-base:1.7.0-rc1"
+    baseImage: "openmetadata/ingestion-base:1.7.0"
     # disableVersionValidation: ""
     # https://argoproj.github.io/argo-workflows/service-accounts/
     serviceAccount:
