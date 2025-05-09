@@ -5,7 +5,7 @@ entries:
     appVersion: 1.7.0
     created: "2025-05-08T17:24:17.009998939Z"
     description: Helm chart to deploy the Collate Hybrid Ingestion Runner on Kubernetes
-    digest: 1c6ea2ea311a6df9684293111812d61e94af7c4734a2f9f7110a7fcc55c2c4f0
+    digest: ef859790985a2d3fe80134cfa665b24dc887e310f87dfbf2293bb75f9a9825c1
     icon: https://open-metadata.org/assets/favicon.png
     maintainers:
     - email: support@open-metadata.org
