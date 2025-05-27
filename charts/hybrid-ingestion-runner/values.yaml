@@ -50,8 +50,8 @@ config:
         cpu: "1000m"
         memory: "4096Mi"
       requests:
-        cpu: "200m"
-        memory: "256Mi"
+        cpu: "1000m"
+        memory: "4096Mi"
     # Automation Workflow Resources configuration
     automationResources:
       limits:
