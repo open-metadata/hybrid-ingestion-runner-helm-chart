@@ -62,7 +62,7 @@ spec:
             - name: ARGO_NAMESPACE
               value: {{ .namespace | default (include "hybrid-ingestion-runner.namespace" $) }}
             - name: ARGO_INGESTION_IMAGE
-              value: "{{ .baseImage }}"
+              value: "{{ .repository }}:{{ .tag }}"
             {{- if .disableVersionValidation }}
             - name: ARGO_DISABLE_VERSION_VALIDATION
               value: "{{ .disableVersionValidation }}"
