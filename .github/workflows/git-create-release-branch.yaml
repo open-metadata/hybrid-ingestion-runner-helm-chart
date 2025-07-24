@@ -22,8 +22,22 @@ jobs:
         fetch-depth: 0
     - name: Update application version
       working-directory: charts/hybrid-ingestion-runner
+      env:
+        NEW_VERSION: ${{ inputs.release_branch_name }}
       run: |
-        sed -i "s/$(cat ../../.version)/${{ inputs.release_branch_name}}/g" ../../README.md ../../.version Chart.yaml values.yaml
+        old_version=$(cat ../../.version)
+
+        # update flat version file and README
+        echo "$NEW_VERSION" > ../../.version
+        sed -i "s/$old_version/$NEW_VERSION/g" ../../README.md
+
+        # update Helm chart version and appVersion
+        yq eval -i '.version = strenv(NEW_VERSION)' Chart.yaml
+        yq eval -i '.appVersion = strenv(NEW_VERSION)' Chart.yaml
+
+        # update image tags in values.yaml
+        yq eval -i '.image.tag = strenv(NEW_VERSION)' values.yaml
+        yq eval -i '.config.ingestionPods.tag = strenv(NEW_VERSION)' values.yaml
     - name: Create pull request
       uses: peter-evans/create-pull-request@v7
       with:
