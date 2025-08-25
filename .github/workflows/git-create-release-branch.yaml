@@ -31,7 +31,7 @@ jobs:
         echo "$NEW_VERSION" > ../../.version
         sed -i "s/$old_version/$NEW_VERSION/g" ../../README.md
 
-        ingestion_image_version="om-$NEW_VERSION-cl-$NEW_VERSION"
+        export ingestion_image_version="om-$NEW_VERSION-cl-$NEW_VERSION"
 
         # update Helm chart version and appVersion
         yq eval -i '.version = strenv(NEW_VERSION)' Chart.yaml
