@@ -11,5 +11,9 @@ spec:
       targetPort: app
       protocol: TCP
       name: app
+    - port: {{ .Values.service.metricsPort }}
+      targetPort: metrics-app
+      protocol: TCP
+      name: metrics-app
   selector:
     {{- include "hybrid-ingestion-runner.selectorLabels" . | nindent 4 }}

@@ -9,6 +9,7 @@ imagePullSecrets:
   - name: ""
 service:
   port: 8585
+  metricsPort: 8989
 config:
   # Runner identifier that will be assigned to an ingestion pipeline
   agentId: "RemoteRunner"
