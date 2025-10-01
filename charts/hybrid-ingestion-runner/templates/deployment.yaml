@@ -70,8 +70,12 @@ spec:
               value: "{{ . }}"
             {{- end }}
             {{- with .ingestionPods }}
+            {{- if $.Values.config.argoWorkflows.enabled }}
             - name: ARGO_NAMESPACE
-              value: {{ .namespace | default (include "hybrid-ingestion-runner.namespace" $) }}
+            {{- else }}
+            - name: SIMPLEK8S_NAMESPACE
+              value: {{ .namespace | default (include "hybrid-ingestion-runner.namespace" $) }}I
+            {{- end }}
             - name: ARGO_INGESTION_IMAGE
               value: "{{ .repository }}:{{ .tag }}"
             {{- if .disableVersionValidation }}
