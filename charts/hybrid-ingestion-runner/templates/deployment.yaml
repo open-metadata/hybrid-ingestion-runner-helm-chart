@@ -74,7 +74,7 @@ spec:
             - name: ARGO_NAMESPACE
             {{- else }}
             - name: SIMPLEK8S_NAMESPACE
-              value: {{ .namespace | default (include "hybrid-ingestion-runner.namespace" $) }}I
+              value: {{ .namespace | default (include "hybrid-ingestion-runner.namespace" $) }}
             {{- end }}
             - name: ARGO_INGESTION_IMAGE
               value: "{{ .repository }}:{{ .tag }}"
