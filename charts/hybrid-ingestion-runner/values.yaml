@@ -5,8 +5,7 @@ image:
   tag: "1.9.11"
   pullPolicy: IfNotPresent
 # Image Pull Secrets https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
-imagePullSecrets:
-  - name: ""
+imagePullSecrets: []
 # Additional environment variables for the hybrid runner container
 extraEnvs: []
 # Additional envFrom entries for the hybrid runner container
