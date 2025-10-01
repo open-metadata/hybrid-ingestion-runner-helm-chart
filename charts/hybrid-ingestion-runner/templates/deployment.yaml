@@ -45,7 +45,14 @@ spec:
             - name: AGENT_ID
               value: "{{ .agentId }}"
             - name: AUTH_TOKEN
+            {{- if .authToken }}
               value: "{{ .authToken }}"
+            {{- else if .authTokenSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .authTokenSecret.name }}"
+                  key: "{{ .authTokenSecret.key }}"
+            {{- end }}
             - name: SERVER_URL
               value: "{{ .serverUrl }}"
             - name: SERVER_HOST_API_URL

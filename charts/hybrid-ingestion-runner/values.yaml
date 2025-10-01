@@ -18,6 +18,10 @@ config:
   agentId: "RemoteRunner"
   # The token used to authenticate with the Collate server
   authToken: ""
+  # The secret used to authenticate with the Collate server. Only used if `authToken` is not set.
+  #authTokenSecret:
+  #  name: "my-secret"
+  #  key: "my-key"
   # The URL of the Collate server
   serverUrl: "wss://my-cluster.getcollate.io"
   # The URL of the Collate server API
