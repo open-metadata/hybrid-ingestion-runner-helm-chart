@@ -44,6 +44,10 @@ spec:
             {{- with .Values.config }}
             - name: AGENT_ID
               value: "{{ .agentId }}"
+            {{- if not .argoWorkflows.enabled }}
+            - name: EXECUTOR_TYPE
+              value: "simplek8s"
+            {{- end }}
             - name: AUTH_TOKEN
             {{- if .authToken }}
               value: "{{ .authToken }}"

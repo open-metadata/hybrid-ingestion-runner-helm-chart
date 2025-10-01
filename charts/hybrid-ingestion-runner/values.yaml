@@ -68,6 +68,7 @@ config:
     # Pass any extra environment variables to the running pods, as `[key1:value1,key2:value2,...]`
     extraEnvs: []
   argoWorkflows:
+    enabled: false
     # The endpoint (host:port) of the Argo Workflows server
     endpoint: ""
     # backoff retry time in seconds to test the connection
