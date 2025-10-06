@@ -42,17 +42,28 @@ spec:
               containerPort: 8989
               protocol: TCP
           env:
-            - name: ARGO_WORKFLOW_EXECUTOR_SERVICE_ACCOUNT_NAME
+            - name: INGESTION_SERVICE_ACCOUNT_NAME
               value: {{ include "hybrid-ingestion-runner.ingestionServiceAccountName" . }}
             {{- with .Values.config }}
             - name: AGENT_ID
               value: "{{ .agentId }}"
+            {{- if not .argoWorkflows.enabled }}
+            - name: EXECUTOR_TYPE
+              value: "simplek8s"
+            {{- end }}
             - name: AUTH_TOKEN
+            {{- if .authToken }}
               value: "{{ .authToken }}"
+            {{- else if .authTokenSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .authTokenSecret.name }}"
+                  key: "{{ .authTokenSecret.key }}"
+            {{- end }}
             - name: SERVER_URL
-              value: "{{ .serverUrl }}"
+              value: "wss://{{ .serverHost }}"
             - name: SERVER_HOST_API_URL
-              value: "{{ .serverHostApiUrl }}"
+              value: "https://{{ .serverHost }}/api"
             {{- with .secretsManager }}
             - name: SECRETS_MANAGER
               value: "{{ . }}"
@@ -62,71 +73,72 @@ spec:
               value: "{{ . }}"
             {{- end }}
             {{- with .ingestionPods }}
-            - name: ARGO_NAMESPACE
+            - name: INGESTION_NAMESPACE
               value: {{ .namespace | default (include "hybrid-ingestion-runner.namespace" $) }}
-            - name: ARGO_INGESTION_IMAGE
+            - name: INGESTION_IMAGE
               value: "{{ .repository }}:{{ .tag }}"
             {{- if .disableVersionValidation }}
-            - name: ARGO_DISABLE_VERSION_VALIDATION
+            - name: INGESTION_DISABLE_VERSION_VALIDATION
               value: "{{ .disableVersionValidation }}"
             {{- end }}
             {{- with .customerToleration }}
-            - name: ARGO_WORKFLOW_CUSTOMER_TOLERATION
+            - name: INGESTION_CUSTOMER_TOLERATION
               value: "{{ . }}"
             {{- end }}
             {{- with .imagePullSecrets }}
-            - name: ARGO_IMAGE_PULL_SECRETS
+            - name: INGESTION_IMAGE_PULL_SECRETS
               value: "{{ . }}"
             {{- end }}
             {{- with .automountSAToken }}
-            - name: ARGO_AUTOMOUNT_SA_TOKEN
+            - name: INGESTION_AUTOMOUNT_SA_TOKEN
               value: "{{ . }}"
             {{- end }}
             {{- with .extraEnvs }}
-            - name: ARGO_EXTRA_ENVS
+            - name: INGESTION_EXTRA_ENVS
               value: '[{{ join "," . }}]'
             {{- end }}
             {{- with .resources.limits }}
             {{- with .cpu }}
-            - name: ARGO_WORKFLOW_CPU_LIMIT
+            - name: INGESTION_CPU_LIMIT
               value: "{{ . }}"
             {{- end }}
             {{- with .memory }}
-            - name: ARGO_WORKFLOW_MEMORY_LIMIT
+            - name: INGESTION_MEMORY_LIMIT
               value: "{{ . }}"
             {{- end }}
             {{- end }}
             {{- with .resources.requests }}
             {{- with .cpu }}
-            - name: ARGO_WORKFLOW_CPU_REQUEST
+            - name: INGESTION_CPU_REQUEST
               value: "{{ . }}"
             {{- end }}
             {{- with .memory }}
-            - name: ARGO_WORKFLOW_MEMORY_REQUEST
+            - name: INGESTION_MEMORY_REQUEST
               value: "{{ . }}"
             {{- end }}
             {{- end }}
             {{- with .automationResources.limits }}
             {{- with .cpu }}
-            - name: ARGO_AUTOMATION_WORKFLOW_CPU_LIMIT
+            - name: INGESTION_AUTOMATION_WORKFLOW_CPU_LIMIT
               value: "{{ . }}"
             {{- end }}
             {{- with .memory }}
-            - name: ARGO_AUTOMATION_WORKFLOW_MEMORY_LIMIT
+            - name: INGESTION_AUTOMATION_WORKFLOW_MEMORY_LIMIT
               value: "{{ . }}"
             {{- end }}
             {{- end }}
             {{- with .automationResources.requests }}
             {{- with .cpu }}
-            - name: ARGO_AUTOMATION_WORKFLOW_CPU_REQUEST
+            - name: INGESTION_AUTOMATION_WORKFLOW_CPU_REQUEST
               value: "{{ . }}"
             {{- end }}
             {{- with .memory }}
-            - name: ARGO_AUTOMATION_WORKFLOW_MEMORY_REQUEST
+            - name: INGESTION_AUTOMATION_WORKFLOW_MEMORY_REQUEST
               value: "{{ . }}"
             {{- end }}
             {{- end }}
             {{- end }}
+            {{- if .argoWorkflows.enabled }}
             {{- with .argoWorkflows }}
             - name: PIPELINE_SERVICE_CLIENT_ENDPOINT
               value: "{{ .endpoint }}"
@@ -146,6 +158,7 @@ spec:
             {{- with .backoffTime }}
             - name: ARGO_TEST_CONNECTION_BACKOFF_TIME
               value: "{{ . }}"
+            {{- end }}
             {{- end }}
             {{- end }}
             {{- end }}
