@@ -23,10 +23,8 @@ config:
   #authTokenSecret:
   #  name: "my-secret"
   #  key: "my-key"
-  # The URL of the Collate server
-  serverUrl: "wss://my-cluster.getcollate.io"
-  # The URL of the Collate server API
-  serverHostApiUrl: "https://my-cluster.getcollate.io/api"
+  # The Collate server host (without the protocol)
+  serverHost: "my-cluster.getcollate.io"
   # The Secrets Manager to use
   # secretsManager: "managed-aws" # To use AWS Secrets Manager. This is the only supported option for now.
   secretsManager: ""

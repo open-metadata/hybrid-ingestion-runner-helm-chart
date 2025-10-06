@@ -61,9 +61,9 @@ spec:
                   key: "{{ .authTokenSecret.key }}"
             {{- end }}
             - name: SERVER_URL
-              value: "{{ .serverUrl }}"
+              value: "wss://{{ .serverHost }}"
             - name: SERVER_HOST_API_URL
-              value: "{{ .serverHostApiUrl }}"
+              value: "https://{{ .serverHost }}/api"
             {{- with .secretsManager }}
             - name: SECRETS_MANAGER
               value: "{{ . }}"
