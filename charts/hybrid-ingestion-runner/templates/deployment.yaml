@@ -38,6 +38,9 @@ spec:
             - name: app
               containerPort: 8585
               protocol: TCP
+            - name: metrics-app
+              containerPort: 8989
+              protocol: TCP
           env:
             - name: ARGO_WORKFLOW_EXECUTOR_SERVICE_ACCOUNT_NAME
               value: {{ include "hybrid-ingestion-runner.ingestionServiceAccountName" . }}
