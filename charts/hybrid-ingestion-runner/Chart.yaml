@@ -24,3 +24,10 @@ maintainers:
   - name: OpenMetadata
     email: support@open-metadata.org
 icon: https://open-metadata.org/assets/favicon.png
+dependencies:
+  - name: argo-workflows
+    version: "0.45.26"
+    repository: "https://argoproj.github.io/argo-helm"
+    condition: argo-workflows.enabled
+    tags:
+      - argo-workflows

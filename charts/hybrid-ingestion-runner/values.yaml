@@ -36,6 +36,7 @@ config:
     # Repository and tag for the Argo ingestion pod image
     repository: "118146679784.dkr.ecr.eu-west-1.amazonaws.com/collate-customers-ingestion-slim-eu-west-1"
     tag: "om-1.10.0-cl-1.10.0"
+    imagePullSecrets: "omd-registry-credentials"
     # Image Pull Secrets for the ingestion pod image (comma separated string)
     # imagePullSecrets: ""
     # disableVersionValidation: ""
@@ -69,7 +70,7 @@ config:
   argoWorkflows:
     enabled: false
     # The endpoint (host:port) of the Argo Workflows server
-    endpoint: ""
+    endpoint: "http://argo-workflows-server.argo-workflows.svc.cluster.local:2746"
     # backoff retry time in seconds to test the connection
     # backOffTime: ""
     # SSL to connect to the Argo Server
@@ -89,3 +90,56 @@ serviceMonitor:
 nodeSelector: {}
 tolerations: []
 affinity: {}
+ecrRegistryHelper:
+  # Enable the ECR Registry Helper CronJob
+  enabled: true
+  # Schedule in Cron format
+  schedule: "0 0/6 * * *" # Every 6 hours
+  image:
+    repository: "public.ecr.aws/r2h3l6e4/awscli-kubectl"
+    tag: "latest"
+    pullPolicy: "IfNotPresent"
+  # Service Account for the ECR Registry Helper CronJob
+  serviceAccount:
+    create: true
+    name: "omd-pull-secret-refresh"
+    annotations: {}
+  # Resources configuration for the ECR Registry Helper CronJob
+  resources:
+    limits:
+      cpu: "100m"
+      memory: "128Mi"
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+  collateCredentials:
+    # You can provide the AWS credentials either via `value` or `secretRef` to an existing Kubernetes Secret
+    # If both are provided, `secretRef` will take precedence
+    # Example of `secretRef`:
+    # The secret value should have the following keys - AWS_SECRET_ACCESS_KEY, AWS_ACCESS_KEY_ID, AWS_ACCOUNT
+    secretRef: ""
+    values:
+      accessKeyId: ""
+      secretAccessKey: ""
+      account: "118146679784"
+
+# Argo Workflows Helm Chart values
+# See https://argoproj.github.io/argo-helm/
+argo-workflows:
+  enabled: true
+  fullnameOverride: "argo-workflows"
+  namespaceOverride: "argo-workflows"
+  crds:
+    install: true
+  controller:
+    serviceAccount:
+      create: true
+      name: "argo-workflows-controller-sa"
+  server:
+    serviceAccount:
+      create: true
+      name: "argo-workflows-server-sa"
+    extraArgs: 
+    - "--auth-mode=client"
+  artifactRepository:
+    archiveLogs: false

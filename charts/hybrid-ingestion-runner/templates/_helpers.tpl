@@ -83,3 +83,12 @@ Create the name of the service account to use by the Ingestion pods
 {{- default "default" .Values.config.ingestionPods.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Helper function for ECR Registry Helper Service Account Name
+*/}}
+{{- define "ecr-registry-helper.serviceAccountName" }}
+{{- if .Values.ecrRegistryHelper.serviceAccount.create }}
+{{- default (printf "%s-ecr" (include "hybrid-ingestion-runner.fullname" .)) .Values.ecrRegistryHelper.serviceAccount.name }}
+{{- end }}
+{{- end }}
