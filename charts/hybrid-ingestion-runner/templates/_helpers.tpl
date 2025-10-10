@@ -94,6 +94,15 @@ Helper function for ECR Registry Helper Service Account Name
 {{- end }}
 
 {{/*
+Create a default fully qualified app name.
+We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+If release name contains chart name it will be used as a full name.
+*/}}
+{{- define "ecr-registry-helper.fullname" -}}
+{{- printf "%s-ecr" (include "hybrid-ingestion-runner.fullname" .)  | trunc 63 | trimSuffix "-" }}
+{{- end -}}
+
+{{/*
 Helper function to set Argo Workflows Endpoint
 */}}
 {{- define "argoWorkflows.endpoint" }}

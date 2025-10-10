@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "hybrid-ingestion-runner.fullname" . }}-ecr-registry-helper
+  name: {{ include "ecr-registry-helper.fullname" . }}
   labels:
     {{- include "hybrid-ingestion-runner.labels" . | nindent 4 }}
   annotations:
