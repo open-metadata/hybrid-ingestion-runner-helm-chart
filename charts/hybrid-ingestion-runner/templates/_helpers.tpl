@@ -98,7 +98,7 @@ Helper function to set Argo Workflows Endpoint
 */}}
 {{- define "argoWorkflows.endpoint" }}
 {{- if .Values.argoWorkflows.enabled }}
-{{- printf "http://argo-workflows-server.argo-workflows.svc.cluster.local:2746" }}
+{{- printf "http://argo-workflows-server:2746" }}
 {{- else }}
 {{- printf "%s" .Values.config.argoWorkflows.endpoint }}
 {{- end }}
