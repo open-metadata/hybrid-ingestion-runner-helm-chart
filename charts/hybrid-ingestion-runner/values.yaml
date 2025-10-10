@@ -67,9 +67,8 @@ config:
     # Pass any extra environment variables to the running pods, as `[key1:value1,key2:value2,...]`
     extraEnvs: []
   argoWorkflows:
-    enabled: false
     # The endpoint (host:port) of the Argo Workflows server
-    endpoint: "http://argo-workflows-server.argo-workflows.svc.cluster.local:2746"
+    endpoint: ""
     # backoff retry time in seconds to test the connection
     # backOffTime: ""
     # SSL to connect to the Argo Server
@@ -124,8 +123,8 @@ ecrRegistryHelper:
 
 # Argo Workflows Helm Chart values
 # See https://argoproj.github.io/argo-helm/
-argo-workflows:
-  enabled: true
+argoWorkflows:
+  enabled: false
   fullnameOverride: "argo-workflows"
   namespaceOverride: "argo-workflows"
   crds:

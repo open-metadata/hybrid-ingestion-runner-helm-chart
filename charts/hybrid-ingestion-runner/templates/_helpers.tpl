@@ -92,3 +92,14 @@ Helper function for ECR Registry Helper Service Account Name
 {{- default (printf "%s-ecr" (include "hybrid-ingestion-runner.fullname" .)) .Values.ecrRegistryHelper.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Helper function to set Argo Workflows Endpoint
+*/}}
+{{- define "argoWorkflows.endpoint" }}
+{{- if .Values.argoWorkflows.enabled }}
+{{- printf "http://argo-workflows-server.argo-workflows.svc.cluster.local:2746" }}
+{{- else }}
+{{- printf "%s" .Values.config.argoWorkflows.endpoint }}
+{{- end }}
+{{- end }}
