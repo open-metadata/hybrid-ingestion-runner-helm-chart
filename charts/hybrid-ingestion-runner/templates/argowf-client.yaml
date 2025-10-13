@@ -1,4 +1,4 @@
-{{- if .Values.config.argoWorkflows.enabled }}
+{{- if or .Values.argoWorkflows.enabled (ne .Values.config.argoWorkflows.endpoint "") }}
 ---
 apiVersion: v1
 kind: ServiceAccount

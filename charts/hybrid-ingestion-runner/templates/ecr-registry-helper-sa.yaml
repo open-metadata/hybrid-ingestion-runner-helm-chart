@@ -1,0 +1,13 @@
+{{- if .Values.ecrRegistryHelper.enabled }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ include "ecr-registry-helper.serviceAccountName" . }}
+  labels:
+    {{- include "hybrid-ingestion-runner.labels" . | nindent 4 }}
+  {{- with .Values.ecrRegistryHelper.serviceAccount.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  namespace: {{ .Release.Namespace }}
+{{- end}}

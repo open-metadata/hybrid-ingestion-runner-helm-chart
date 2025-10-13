@@ -44,13 +44,13 @@ spec:
           env:
             - name: INGESTION_SERVICE_ACCOUNT_NAME
               value: {{ include "hybrid-ingestion-runner.ingestionServiceAccountName" . }}
+            {{- if and (not .Values.argoWorkflows.enabled) (eq .Values.config.argoWorkflows.endpoint "") }}
+            - name: EXECUTOR_TYPE
+              value: simpleK8s
+            {{- end }}
             {{- with .Values.config }}
             - name: AGENT_ID
               value: "{{ .agentId }}"
-            {{- if not .argoWorkflows.enabled }}
-            - name: EXECUTOR_TYPE
-              value: "simplek8s"
-            {{- end }}
             - name: AUTH_TOKEN
             {{- if .authToken }}
               value: "{{ .authToken }}"
@@ -138,15 +138,16 @@ spec:
             {{- end }}
             {{- end }}
             {{- end }}
-            {{- if .argoWorkflows.enabled }}
-            {{- with .argoWorkflows }}
+            {{- end }}
+            {{- if or .Values.argoWorkflows.enabled (ne .Values.config.argoWorkflows.endpoint "") }}
             - name: PIPELINE_SERVICE_CLIENT_ENDPOINT
-              value: "{{ .endpoint }}"
+              value: {{ include "argoWorkflows.endpoint" . }}
             - name: ARGO_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: argowf-client-token
                   key: token
+            {{- with .Values.config.argoWorkflows}}
             {{- with .secondsAfterCompletionTTL }}
             - name: ARGO_SECONDS_AFTER_COMPLETION_TTL
               value: "{{ . }}"
@@ -154,11 +155,10 @@ spec:
             {{- with .certificatePath }}
             - name: ARGO_SERVER_CERTIFICATE_PATH
               value: "{{ . }}" 
-            {{- end}}
+            {{- end }}
             {{- with .backoffTime }}
             - name: ARGO_TEST_CONNECTION_BACKOFF_TIME
               value: "{{ . }}"
-            {{- end }}
             {{- end }}
             {{- end }}
             {{- end }}
