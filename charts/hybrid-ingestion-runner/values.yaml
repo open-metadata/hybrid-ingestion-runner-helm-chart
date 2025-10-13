@@ -26,7 +26,7 @@ config:
   serverHost: "my-cluster.getcollate.io"
   # The Secrets Manager to use
   # secretsManager: "managed-aws" # To use AWS Secrets Manager. This is the only supported option for now.
-  secretsManager: ""
+  secretsManager: "kubernetes"
   # The delay between reconnection attempts
   # reconnectDelaySeconds: "5"
   # The following section applies for Argo Workflows configuration
