@@ -21,7 +21,9 @@ jobs:
         uses: azure/setup-helm@v4
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
-
+      - name: Build dependencies
+        run:
+          helm repo add argo-workflows https://argoproj.github.io/argo-helm 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.7.0
         env:

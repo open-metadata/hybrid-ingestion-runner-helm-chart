@@ -94,7 +94,7 @@ ecrRegistryHelper:
   # Schedule in Cron format
   schedule: "0 0/6 * * *" # Every 6 hours
   image:
-    repository: "public.ecr.aws/r2h3l6e4/awscli-kubectl"
+    repository: "heyvaldemar/aws-kubectl"
     tag: "latest"
     pullPolicy: "IfNotPresent"
   # Service Account for the ECR Registry Helper CronJob
