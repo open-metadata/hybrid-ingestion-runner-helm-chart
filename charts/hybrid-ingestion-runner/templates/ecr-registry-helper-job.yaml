@@ -1,0 +1,54 @@
+{{- if .Values.ecrRegistryHelper.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "ecr-registry-helper.fullname" . }}
+  labels:
+    {{- include "hybrid-ingestion-runner.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "10"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  ttlSecondsAfterFinished: {{ .Values.ecrRegistryHelper.ttlSecondsAfterFinished | default 300 }}
+  backoffLimit: {{ .Values.ecrRegistryHelper.backoffLimit | default 1 }}
+  template:
+    metadata:
+      labels:
+        {{- include "hybrid-ingestion-runner.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: ecr-registry-helper
+    spec:
+      serviceAccountName: {{ include "ecr-registry-helper.serviceAccountName" . }}
+      restartPolicy: Never
+      containers:
+        - name: ecr-registry-helper
+          image: {{ .Values.ecrRegistryHelper.image.repository }}:{{ .Values.ecrRegistryHelper.image.tag }}
+          imagePullPolicy: {{ .Values.ecrRegistryHelper.image.pullPolicy | default "IfNotPresent" }}
+          envFrom:
+          - configMapRef:
+              name: {{ include "hybrid-ingestion-runner.fullname" . }}-config
+          {{- if not .Values.ecrRegistryHelper.collateCredentials.secretRef }}
+          - secretRef:
+              name: {{ include "hybrid-ingestion-runner.fullname" . }}-secrets
+          {{- else }}
+          - secretRef:
+              name: {{ .Values.ecrRegistryHelper.collateCredentials.secretRef }}
+          {{- end }}
+          command: ["/bin/sh", "-c"]
+          {{- with .Values.ecrRegistryHelper.resources }}
+          resources:
+            {{- toYaml . | nindent 16 }}
+          {{- end }}
+          args:
+            - |
+              ECR_TOKEN=$(aws ecr get-login-password) &&
+              kubectl delete secret --ignore-not-found $DOCKER_SECRET_NAME -n $NAMESPACE_NAME &&
+              echo "Deleted existing secret (if any) at $(date)" &&
+              kubectl create secret docker-registry $DOCKER_SECRET_NAME --docker-server=$DOCKER_REGISTRY --docker-username=AWS --docker-password=$ECR_TOKEN --namespace=$NAMESPACE_NAME &&
+              echo "Secret was successfully updated at $(date)"
+          {{- with .Values.ecrRegistryHelper.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      restartPolicy: Never
+{{- end }}

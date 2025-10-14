@@ -2,29 +2,31 @@
 replicaCount: 1
 image:
   repository: "118146679784.dkr.ecr.eu-west-1.amazonaws.com/hybrid-ingestion-runner"
-  tag: "1.9.12"
+  tag: "1.10.0"
   pullPolicy: IfNotPresent
 # Image Pull Secrets https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
-imagePullSecrets:
-  - name: ""
+imagePullSecrets: []
 # Additional environment variables for the hybrid runner container
 extraEnvs: []
 # Additional envFrom entries for the hybrid runner container
 envFrom: []
 service:
   port: 8585
+  metricsPort: 8989
 config:
   # Runner identifier that will be assigned to an ingestion pipeline
   agentId: "RemoteRunner"
   # The token used to authenticate with the Collate server
   authToken: ""
-  # The URL of the Collate server
-  serverUrl: "wss://my-cluster.getcollate.io"
-  # The URL of the Collate server API
-  serverHostApiUrl: "https://my-cluster.getcollate.io/api"
+  # The secret used to authenticate with the Collate server. Only used if `authToken` is not set.
+  #authTokenSecret:
+  #  name: "my-secret"
+  #  key: "my-key"
+  # The Collate server host (without the protocol)
+  serverHost: "my-cluster.getcollate.io"
   # The Secrets Manager to use
   # secretsManager: "managed-aws" # To use AWS Secrets Manager. This is the only supported option for now.
-  secretsManager: ""
+  secretsManager: "kubernetes"
   # The delay between reconnection attempts
   # reconnectDelaySeconds: "5"
   # The following section applies for Argo Workflows configuration
@@ -33,9 +35,9 @@ config:
     # namespace: "another-namespace"
     # Repository and tag for the Argo ingestion pod image
     repository: "118146679784.dkr.ecr.eu-west-1.amazonaws.com/collate-customers-ingestion-slim-eu-west-1"
-    tag: "om-1.9.12-cl-1.9.12"
+    tag: "om-1.10.0-cl-1.10.0"
     # Image Pull Secrets for the ingestion pod image (comma separated string)
-    # imagePullSecrets: ""
+    imagePullSecrets: "omd-registry-credentials"
     # disableVersionValidation: ""
     # https://argoproj.github.io/argo-workflows/service-accounts/
     serviceAccount:
@@ -86,3 +88,57 @@ serviceMonitor:
 nodeSelector: {}
 tolerations: []
 affinity: {}
+ecrRegistryHelper:
+  # Enable the ECR Registry Helper CronJob
+  enabled: true
+  # Schedule in Cron format
+  schedule: "0 0/6 * * *" # Every 6 hours
+  image:
+    repository: "public.ecr.aws/r2h3l6e4/awscli-kubectl"
+    tag: "latest"
+    pullPolicy: "IfNotPresent"
+  # Service Account for the ECR Registry Helper CronJob
+  serviceAccount:
+    create: true
+    name: "omd-pull-secret-refresh"
+    annotations: {}
+  # Resources configuration for the ECR Registry Helper CronJob
+  resources:
+    limits:
+      cpu: "100m"
+      memory: "128Mi"
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+  collateCredentials:
+    # You can provide the AWS credentials either via `value` or `secretRef` to an existing Kubernetes Secret
+    # If both are provided, `secretRef` will take precedence
+    # Example of `secretRef`:
+    # The secret value should have the following keys - AWS_SECRET_ACCESS_KEY, AWS_ACCESS_KEY_ID, AWS_ACCOUNT
+    secretRef: ""
+    values:
+      accessKeyId: ""
+      secretAccessKey: ""
+      account: "118146679784"
+
+# Argo Workflows Helm Chart values
+# See https://argoproj.github.io/argo-helm/
+argoWorkflows:
+  enabled: false
+
+argo-workflows:
+  fullnameOverride: "argo-workflows"
+  crds:
+    install: true
+  controller:
+    serviceAccount:
+      create: true
+      name: "argo-workflows-controller-sa"
+  server:
+    serviceAccount:
+      create: true
+      name: "argo-workflows-server-sa"
+    extraArgs: 
+    - "--auth-mode=client"
+  artifactRepository:
+    archiveLogs: false

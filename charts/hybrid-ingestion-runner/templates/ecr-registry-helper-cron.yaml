@@ -1,0 +1,50 @@
+{{- if .Values.ecrRegistryHelper.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ecr-registry-helper
+  labels:
+    {{- include "hybrid-ingestion-runner.labels" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.ecrRegistryHelper.schedule }}
+  startingDeadlineSeconds: 60
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            {{- include "hybrid-ingestion-runner.selectorLabels" . | nindent 12 }}
+        spec:
+          restartPolicy: OnFailure
+          serviceAccountName: {{ include "ecr-registry-helper.serviceAccountName" . }}
+          containers:
+            - name: ecr-registry-helper
+              image: {{ .Values.ecrRegistryHelper.image.repository }}:{{ .Values.ecrRegistryHelper.image.tag }}
+              imagePullPolicy: {{ .Values.ecrRegistryHelper.image.pullPolicy | default "IfNotPresent" }}
+              envFrom:
+                - configMapRef:
+                    name: {{ include "hybrid-ingestion-runner.fullname" . }}-config
+                {{- if not .Values.ecrRegistryHelper.collateCredentials.secretRef }}
+                - secretRef:
+                    name: {{ include "hybrid-ingestion-runner.fullname" . }}-secrets
+                {{- else }}
+                - secretRef:
+                    name: {{ .Values.ecrRegistryHelper.collateCredentials.secretRef }}
+                {{- end }}
+              command: ["/bin/sh", "-c"]
+              {{- with .Values.ecrRegistryHelper.resources }}
+              resources:
+                {{- toYaml . | nindent 16 }}
+              {{- end }}
+              args:
+                - |
+                  ECR_TOKEN=$(aws ecr get-login-password) &&
+                  kubectl delete secret --ignore-not-found $DOCKER_SECRET_NAME -n $NAMESPACE_NAME &&
+                  echo "Deleted existing secret (if any) at $(date)" &&
+                  kubectl create secret docker-registry $DOCKER_SECRET_NAME --docker-server=$DOCKER_REGISTRY --docker-username=AWS --docker-password=$ECR_TOKEN --namespace=$NAMESPACE_NAME &&
+                  echo "Secret was successfully updated at $(date)"
+          restartPolicy: Never
+{{- end }}

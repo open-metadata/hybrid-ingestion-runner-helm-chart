@@ -83,3 +83,32 @@ Create the name of the service account to use by the Ingestion pods
 {{- default "default" .Values.config.ingestionPods.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Helper function for ECR Registry Helper Service Account Name
+*/}}
+{{- define "ecr-registry-helper.serviceAccountName" }}
+{{- if .Values.ecrRegistryHelper.serviceAccount.create }}
+{{- default (printf "%s-ecr" (include "hybrid-ingestion-runner.fullname" .)) .Values.ecrRegistryHelper.serviceAccount.name }}
+{{- end }}
+{{- end }}
+
+{{/*
+Create a default fully qualified app name.
+We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+If release name contains chart name it will be used as a full name.
+*/}}
+{{- define "ecr-registry-helper.fullname" -}}
+{{- printf "%s-ecr" (include "hybrid-ingestion-runner.fullname" .)  | trunc 63 | trimSuffix "-" }}
+{{- end -}}
+
+{{/*
+Helper function to set Argo Workflows Endpoint
+*/}}
+{{- define "argoWorkflows.endpoint" }}
+{{- if .Values.argoWorkflows.enabled }}
+{{- printf "http://argo-workflows-server:2746" }}
+{{- else }}
+{{- printf "%s" .Values.config.argoWorkflows.endpoint }}
+{{- end }}
+{{- end }}

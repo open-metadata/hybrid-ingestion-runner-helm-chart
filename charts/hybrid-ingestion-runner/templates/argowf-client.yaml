@@ -1,3 +1,4 @@
+{{- if or .Values.argoWorkflows.enabled (ne .Values.config.argoWorkflows.endpoint "") }}
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -82,4 +83,4 @@ metadata:
     kubernetes.io/service-account.name: argowf-client
   name: argowf-client-token
 type: kubernetes.io/service-account-token
-
+{{- end }}
