@@ -30,6 +30,20 @@ entries:
     - https://github.com/open-metadata/hybrid-ingestion-runner-helm-chart/releases/download/hybrid-ingestion-runner-1.9.14/hybrid-ingestion-runner-1.9.14.tgz
     version: 1.9.14
   - apiVersion: v2
+    appVersion: 1.9.13
+    created: "2025-10-17T11:10:45.011339594Z"
+    description: Helm chart to deploy the Collate Hybrid Ingestion Runner on Kubernetes
+    digest: 8c17f85e2098d7550438154d89edb16e5951ed387a3d19e3c043c4baccef286f
+    icon: https://open-metadata.org/assets/favicon.png
+    maintainers:
+    - email: support@open-metadata.org
+      name: OpenMetadata
+    name: hybrid-ingestion-runner
+    type: application
+    urls:
+    - https://github.com/open-metadata/hybrid-ingestion-runner-helm-chart/releases/download/hybrid-ingestion-runner-1.9.13/hybrid-ingestion-runner-1.9.13.tgz
+    version: 1.9.13
+  - apiVersion: v2
     appVersion: 1.9.12
     created: "2025-10-06T10:40:36.051987749Z"
     description: Helm chart to deploy the Collate Hybrid Ingestion Runner on Kubernetes
@@ -463,4 +477,4 @@ entries:
     urls:
     - https://github.com/open-metadata/hybrid-ingestion-runner-helm-chart/releases/download/hybrid-ingestion-runner-0.0.1/hybrid-ingestion-runner-0.0.1.tgz
     version: 0.0.1
-generated: "2025-10-15T05:48:54.719178681Z"
+generated: "2025-10-17T11:10:45.011677207Z"
