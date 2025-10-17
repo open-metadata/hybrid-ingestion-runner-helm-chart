@@ -11,7 +11,7 @@ spec:
     - name: {{ include "hybrid-ingestion-runner.fullname" . }}-up
       rules:
         - alert: HybridAgentDown
-          expr: 'up{namespace="{{ .Release.Namespace }}"} == 0'
+          expr: 'up{namespace="{{ .Release.Namespace }}", container="hybrid-ingestion-runner"} == 0'
           for: 2m
           labels:
             severity: critical
@@ -21,7 +21,7 @@ spec:
     - name: {{ include "hybrid-ingestion-runner.fullname" . }}-hybrid-agent-connected
       rules:
         - alert: HybridAgentDisconnected
-          expr: 'collate_hybrid_agent_connected{namespace="{{ .Release.Namespace }}"} == 0'
+          expr: 'collate_hybrid_agent_connected{namespace="{{ .Release.Namespace }}", container="hybrid-ingestion-runner"} == 0'
           for: 2m
           labels:
             severity: critical
