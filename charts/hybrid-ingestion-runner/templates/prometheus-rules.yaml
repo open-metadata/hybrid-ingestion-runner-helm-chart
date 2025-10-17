@@ -1,0 +1,34 @@
+{{- if .Values.prometheusRules.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ include "hybrid-ingestion-runner.fullname" . }}-up
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "hybrid-ingestion-runner.labels" . | nindent 4 }}
+spec:
+  groups:
+    - name: {{ include "hybrid-ingestion-runner.fullname" . }}-up
+      rules:
+        - alert: HybridAgentDown
+          expr: 'up{namespace="{{ .Release.Namespace }}"} == 0'
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: {{ printf "Prometheus target {{ $labels.instance }} is down" }}
+            description: {{ printf "Prometheus target {{ $labels.instance }} in namespace %s has been down for 2 minutes." .Release.Namespace }}
+    - name: {{ include "hybrid-ingestion-runner.fullname" . }}-hybrid-agent-connected
+      rules:
+        - alert: HybridAgentDisconnected
+          expr: 'collate_hybrid_agent_connected{namespace="{{ .Release.Namespace }}"} == 0'
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: {{ printf "Hybrid agent {{ $labels.instance }} is disconnected" }}
+            description: {{ printf "Hybrid agent {{ $labels.instance }} in namespace %s has reported connection status 0 for 2 minutes." .Release.Namespace }}
+    {{- if .Values.prometheusRules.extraRules }}
+    {{- toYaml .Values.prometheusRules.extraRules | nindent 4 }}
+    {{- end }}
+{{- end }}
