@@ -85,6 +85,22 @@ serviceMonitor:
   interval: 30s
   annotations: {}
   labels: {}
+# Enable Prometheus Rules
+prometheusRules:
+  enabled: false
+  # Additional Prometheus rules
+  extraRules: []
+  # extraRules:
+  #   - name: custom-rules
+  #     rules:
+  #       - alert: HighMemoryUsage
+  #         expr: 'container_memory_usage_bytes{namespace="{{ .Release.Namespace }}"} > 500000000'
+  #         for: 5m
+  #         labels:
+  #           severity: warning
+  #         annotations:
+  #           summary: {{ printf "High memory usage detected on {{ $labels.pod }}" }}
+  #           description: {{ printf "Pod {{ $labels.pod }} in namespace %s is using more than 500MB of memory." .Release.Namespace }}
 nodeSelector: {}
 tolerations: []
 affinity: {}
