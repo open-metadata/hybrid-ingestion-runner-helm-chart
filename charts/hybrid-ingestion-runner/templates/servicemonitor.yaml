@@ -17,7 +17,7 @@ spec:
     matchLabels:
       {{- include "hybrid-ingestion-runner.selectorLabels" . | nindent 6 }}
   endpoints:
-    - port: app
-      path: /prometheus
+    - port: metrics-app
+      path: /metrics
       interval: {{ .Values.serviceMonitor.interval }}
 {{- end }}
