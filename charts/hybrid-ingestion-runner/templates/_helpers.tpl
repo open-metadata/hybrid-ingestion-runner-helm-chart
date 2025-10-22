@@ -106,8 +106,8 @@ If release name contains chart name it will be used as a full name.
 Helper function to set Argo Workflows Endpoint
 */}}
 {{- define "argoWorkflows.endpoint" }}
-{{- if .Values.argoWorkflows.enabled }}
-{{- printf "http://argo-workflows-server:2746" }}
+{{- if .Values.installArgoWorkflows }}
+{{- printf "http://argo-workflows-server.%s.svc:2746" .Values.argoWorkflows.namespaceOverride }}
 {{- else }}
 {{- printf "%s" .Values.config.argoWorkflows.endpoint }}
 {{- end }}

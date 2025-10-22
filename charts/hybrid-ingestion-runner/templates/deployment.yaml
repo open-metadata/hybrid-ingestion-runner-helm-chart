@@ -47,7 +47,7 @@ spec:
           env:
             - name: INGESTION_SERVICE_ACCOUNT_NAME
               value: {{ include "hybrid-ingestion-runner.ingestionServiceAccountName" . }}
-            {{- if and (not .Values.argoWorkflows.enabled) (eq .Values.config.argoWorkflows.endpoint "") }}
+            {{- if and (not .Values.installArgoWorkflows) (eq .Values.config.argoWorkflows.endpoint "") }}
             - name: EXECUTOR_TYPE
               value: simpleK8s
             {{- end }}
@@ -142,7 +142,7 @@ spec:
             {{- end }}
             {{- end }}
             {{- end }}
-            {{- if or .Values.argoWorkflows.enabled (ne .Values.config.argoWorkflows.endpoint "") }}
+            {{- if or .Values.installArgoWorkflows (ne .Values.config.argoWorkflows.endpoint "") }}
             - name: PIPELINE_SERVICE_CLIENT_ENDPOINT
               value: {{ include "argoWorkflows.endpoint" . }}
             - name: ARGO_TOKEN
