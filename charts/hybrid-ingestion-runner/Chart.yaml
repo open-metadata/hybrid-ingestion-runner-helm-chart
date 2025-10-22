@@ -26,8 +26,9 @@ maintainers:
 icon: https://open-metadata.org/assets/favicon.png
 dependencies:
   - name: argo-workflows
+    alias: argoWorkflows
     version: "0.45.26"
     repository: "https://argoproj.github.io/argo-helm"
-    condition: argoWorkflows.enabled
+    condition: installArgoWorkflows
     tags:
       - argo-workflows

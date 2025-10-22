@@ -136,12 +136,13 @@ ecrRegistryHelper:
       accessKeyId: ""
       secretAccessKey: ""
       account: "118146679784"
+
+installArgoWorkflows: false
 # Argo Workflows Helm Chart values
 # See https://argoproj.github.io/argo-helm/
 argoWorkflows:
-  enabled: false
-argo-workflows:
   fullnameOverride: "argo-workflows"
+  namespaceOverride: "argo-workflows"
   crds:
     install: true
   controller:
