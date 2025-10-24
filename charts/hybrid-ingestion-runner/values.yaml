@@ -25,7 +25,7 @@ config:
   # The Collate server host (without the protocol)
   serverHost: "my-cluster.getcollate.io"
   # The Secrets Manager to use
-  # secretsManager: "managed-aws" # To use AWS Secrets Manager. This is the only supported option for now.
+  # secretsManager: "managed-aws" # To use AWS Secrets Manager.
   secretsManager: "kubernetes"
   # The delay between reconnection attempts
   # reconnectDelaySeconds: "5"
