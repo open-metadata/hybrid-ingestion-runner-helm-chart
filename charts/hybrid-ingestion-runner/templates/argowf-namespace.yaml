@@ -1,0 +1,8 @@
+{{- if .Values.createArgoWorkflowsNamespace }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ .Values.argoWorkflows.namespaceOverride }}
+  labels:
+    {{- include "hybrid-ingestion-runner.labels" . | nindent 4 }}
+{{- end }}
