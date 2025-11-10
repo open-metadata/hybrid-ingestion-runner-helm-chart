@@ -137,6 +137,7 @@ ecrRegistryHelper:
       secretAccessKey: ""
       account: "118146679784"
 installArgoWorkflows: false
+createArgoWorkflowsNamespace: false
 # Argo Workflows Helm Chart values
 # See https://argoproj.github.io/argo-helm/
 argoWorkflows:
