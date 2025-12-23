@@ -112,3 +112,28 @@ Helper function to set Argo Workflows Endpoint
 {{- printf "%s" .Values.config.argoWorkflows.endpoint }}
 {{- end }}
 {{- end }}
+
+{{/*
+Helper functions for server URLs
+*/}}
+{{- define "hybrid-ingestion-runner.serverUrl" -}}
+{{- $config := default (dict) .Values.config -}}
+{{- $useSecure := true -}}
+{{- if hasKey $config "useSecureProtocols" -}}
+{{- $useSecure = get $config "useSecureProtocols" -}}
+{{- end -}}
+{{- $protocol := ternary "wss" "ws" $useSecure -}}
+{{- $serverHost := default "" (get $config "serverHost") -}}
+{{- printf "%s://%s" $protocol $serverHost -}}
+{{- end }}
+
+{{- define "hybrid-ingestion-runner.serverHostApiUrl" -}}
+{{- $config := default (dict) .Values.config -}}
+{{- $useSecure := true -}}
+{{- if hasKey $config "useSecureProtocols" -}}
+{{- $useSecure = get $config "useSecureProtocols" -}}
+{{- end -}}
+{{- $protocol := ternary "https" "http" $useSecure -}}
+{{- $serverHost := default "" (get $config "serverHost") -}}
+{{- printf "%s://%s/api" $protocol $serverHost -}}
+{{- end }}

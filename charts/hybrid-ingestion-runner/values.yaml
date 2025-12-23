@@ -24,6 +24,8 @@ config:
   #  key: "my-key"
   # The Collate server host (without the protocol)
   serverHost: "my-cluster.getcollate.io"
+  # Whether to use secure protocols (https/wss) when talking to the Collate server
+  useSecureProtocols: true
   # The Secrets Manager to use
   # secretsManager: "managed-aws" # To use AWS Secrets Manager.
   secretsManager: "kubernetes"
