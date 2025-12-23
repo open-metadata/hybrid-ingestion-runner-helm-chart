@@ -64,9 +64,9 @@ spec:
                   key: "{{ .authTokenSecret.key }}"
             {{- end }}
             - name: SERVER_URL
-              value: "wss://{{ .serverHost }}"
+              value: {{ include "hybrid-ingestion-runner.serverUrl" $ | quote }}
             - name: SERVER_HOST_API_URL
-              value: "https://{{ .serverHost }}/api"
+              value: {{ include "hybrid-ingestion-runner.serverHostApiUrl" $ | quote }}
             {{- with .secretsManager }}
             - name: SECRETS_MANAGER
               value: "{{ . }}"
