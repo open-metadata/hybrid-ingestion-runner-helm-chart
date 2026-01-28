@@ -1,0 +1,54 @@
+{{- if .Values.grafanaDashboard.enabled -}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "hybrid-ingestion-runner.fullname" . }}-dashboard
+  namespace: {{ .Values.grafanaDashboard.namespace | default .Release.Namespace }}
+  labels:
+    {{- include "hybrid-ingestion-runner.labels" . | nindent 4 }}
+    {{- with .Values.grafanaDashboard.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.grafanaDashboard.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+data:
+  hybrid-ingestion-runner-dashboard.json: |-
+{{ .Files.Get "dashboards/hybrid-ingestion-runner-dashboard.json" | indent 4 }}
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: {{ include "hybrid-ingestion-runner.fullname" . }}-dashboard
+  namespace: {{ .Values.grafanaDashboard.namespace | default .Release.Namespace }}
+  labels:
+    {{- include "hybrid-ingestion-runner.labels" . | nindent 4 }}
+    {{- with .Values.grafanaDashboard.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.grafanaDashboard.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- with .Values.grafanaDashboard.folderName }}
+  folderTitle: {{ . }}
+  {{- end }}
+  instanceSelector:
+    matchLabels:
+      {{- toYaml .Values.grafanaDashboard.instanceSelector | nindent 6 }}
+  configMapRef:
+    name: {{ include "hybrid-ingestion-runner.fullname" . }}-dashboard
+    key: hybrid-ingestion-runner-dashboard.json
+  {{- with .Values.grafanaDashboard.plugins }}
+  plugins:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.grafanaDashboard.datasources }}
+  datasources:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  allowCrossNamespaceImport: {{ .Values.grafanaDashboard.allowCrossNamespaceImport | default false }}
+{{- end }}
