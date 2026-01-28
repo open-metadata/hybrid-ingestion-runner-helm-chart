@@ -103,6 +103,32 @@ prometheusRules:
   #         annotations:
   #           summary: {{ printf "High memory usage detected on {{ $labels.pod }}" }}
   #           description: {{ printf "Pod {{ $labels.pod }} in namespace %s is using more than 500MB of memory." .Release.Namespace }}
+# Grafana Dashboard using Grafana Operator
+grafanaDashboard:
+  # Enable Grafana Dashboard
+  enabled: false
+  # Namespace where the dashboard will be created (defaults to Release namespace)
+  # namespace: ""
+  # Folder name in Grafana where the dashboard will be placed
+  folderName: "Hybrid Ingestion Runner"
+  # Instance selector to match the Grafana instance
+  # This should match the labels on your Grafana CR
+  instanceSelector:
+    dashboards: "grafana"
+  # Additional labels for the dashboard
+  labels: {}
+  # Additional annotations for the dashboard
+  annotations: {}
+  # Allow cross-namespace import
+  allowCrossNamespaceImport: false
+  # Plugins required by the dashboard
+  plugins: []
+  # Datasources configuration
+  datasources: []
+  # Example datasources configuration:
+  # datasources:
+  #   - inputName: "DS_PROMETHEUS"
+  #     datasourceName: "Prometheus"
 nodeSelector: {}
 tolerations: []
 affinity: {}
