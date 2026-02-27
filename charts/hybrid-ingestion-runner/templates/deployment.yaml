@@ -75,6 +75,10 @@ spec:
             - name: RECONNECT_DELAY_SECONDS
               value: "{{ . }}"
             {{- end }}
+            {{- with .dynamicIngestionVersionEnabled }}
+            - name: DYNAMIC_INGESTION_VERSION_ENABLED
+              value: "{{ . }}"
+            {{- end }}
             {{- with .ingestionPods }}
             - name: INGESTION_NAMESPACE
               value: {{ .namespace | default (include "hybrid-ingestion-runner.namespace" $) }}
@@ -83,10 +87,6 @@ spec:
             {{- if .disableVersionValidation }}
             - name: INGESTION_DISABLE_VERSION_VALIDATION
               value: "{{ .disableVersionValidation }}"
-            {{- end }}
-            {{- if .dynamicIngestionVersionEnabled }}
-            - name: DYNAMIC_INGESTION_VERSION_ENABLED
-              value: "{{ .dynamicIngestionVersionEnabled }}"
             {{- end }}
             {{- with .customerToleration }}
             - name: INGESTION_CUSTOMER_TOLERATION

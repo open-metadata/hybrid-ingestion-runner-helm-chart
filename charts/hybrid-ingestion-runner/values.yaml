@@ -31,6 +31,8 @@ config:
   secretsManager: "kubernetes"
   # The delay between reconnection attempts
   # reconnectDelaySeconds: "5"
+  # Enable dynamic ingestion version resolution
+  # dynamicIngestionVersionEnabled: "true"
   # The following section applies for Argo Workflows configuration
   ingestionPods:
     # Ingestion Pods' namespace default value is the Helm Chart namespace
@@ -41,7 +43,6 @@ config:
     # Image Pull Secrets for the ingestion pod image (comma separated string)
     imagePullSecrets: "omd-registry-credentials"
     # disableVersionValidation: ""
-    # dynamicIngestionVersionEnabled: ""
     # https://argoproj.github.io/argo-workflows/service-accounts/
     serviceAccount:
       create: true
