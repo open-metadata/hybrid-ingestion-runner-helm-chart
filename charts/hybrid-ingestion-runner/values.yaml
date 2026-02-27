@@ -31,6 +31,8 @@ config:
   secretsManager: "kubernetes"
   # The delay between reconnection attempts
   # reconnectDelaySeconds: "5"
+  # Enable dynamic ingestion version resolution
+  # dynamicIngestionVersionEnabled: "true"
   # The following section applies for Argo Workflows configuration
   ingestionPods:
     # Ingestion Pods' namespace default value is the Helm Chart namespace
