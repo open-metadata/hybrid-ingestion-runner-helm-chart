@@ -41,6 +41,7 @@ config:
     # Image Pull Secrets for the ingestion pod image (comma separated string)
     imagePullSecrets: "omd-registry-credentials"
     # disableVersionValidation: ""
+    # dynamicIngestionVersionEnabled: ""
     # https://argoproj.github.io/argo-workflows/service-accounts/
     serviceAccount:
       create: true

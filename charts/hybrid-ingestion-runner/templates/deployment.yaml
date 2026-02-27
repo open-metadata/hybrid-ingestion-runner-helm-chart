@@ -84,6 +84,10 @@ spec:
             - name: INGESTION_DISABLE_VERSION_VALIDATION
               value: "{{ .disableVersionValidation }}"
             {{- end }}
+            {{- if .dynamicIngestionVersionEnabled }}
+            - name: DYNAMIC_INGESTION_VERSION_ENABLED
+              value: "{{ .dynamicIngestionVersionEnabled }}"
+            {{- end }}
             {{- with .customerToleration }}
             - name: INGESTION_CUSTOMER_TOLERATION
               value: "{{ . }}"
