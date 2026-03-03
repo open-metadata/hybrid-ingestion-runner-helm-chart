@@ -11,6 +11,7 @@ extraEnvs: []
 # Additional envFrom entries for the hybrid runner container
 envFrom: []
 service:
+  type: ClusterIP
   port: 8585
   metricsPort: 8989
 config:
@@ -46,7 +47,7 @@ config:
       create: true
       name: "ingestion"
       # annotations: {}
-      # automount: true
+      automount: true
     # customerToleration: ""
     # If `false`, we will disable the Service Account automount and pass it by hand (argo workflows internally will handle this)
     # autoMountSAToken: ""
@@ -81,6 +82,12 @@ serviceAccount:
   create: true
   annotations: {}
   automount: true
+# Set to true when deploying on OpenShift / ROSA.
+# Omits runAsUser, fsGroup, and seccompProfile from security contexts,
+# which are rejected by OpenShift's restricted-v2 SCC. OpenShift assigns
+# a UID from its allowed range automatically.
+openshift:
+  enabled: false
 # Service monitor for Prometheus metrics
 serviceMonitor:
   enabled: false
