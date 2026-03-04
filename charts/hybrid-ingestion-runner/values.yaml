@@ -83,6 +83,13 @@ serviceAccount:
   create: true
   annotations: {}
   automount: true
+podDisruptionBudget:
+  enabled: false
+  # Optionally add annotations to the PodDisruptionBudget resource
+  annotations: {}
+  # Set either minAvailable or maxUnavailable, but not both
+  # minAvailable: 1
+  maxUnavailable: 1
 # Service monitor for Prometheus metrics
 serviceMonitor:
   enabled: false
