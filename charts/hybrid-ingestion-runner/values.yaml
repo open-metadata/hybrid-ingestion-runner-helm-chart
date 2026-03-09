@@ -70,6 +70,10 @@ config:
         memory: "256Mi"
     # Pass any extra environment variables to the running pods, as `[key1:value1,key2:value2,...]`
     extraEnvs: []
+    # Additional pipeline type configs as a JSON string
+    # Example:
+    # additionalPipelineConfigs: '{"automation":{"priorityClassName":"high-priority"}}'
+    additionalPipelineConfigs: ""
   argoWorkflows:
     # The endpoint (host:port) of the Argo Workflows server
     endpoint: ""
