@@ -51,6 +51,13 @@ spec:
             - name: EXECUTOR_TYPE
               value: simpleK8s
             {{- end }}
+            {{- if or .Values.installArgoWorkflows (ne .Values.config.argoWorkflows.endpoint "") }}
+            - name: ARGO_PIPELINE_TYPE_CONFIGS
+              value: {{ .Values.config.ingestionPods.additionalPipelineConfigs | default "" | quote }}
+            {{- else }}
+            - name: SIMPLEK8S_PIPELINE_TYPE_CONFIGS
+              value: {{ .Values.config.ingestionPods.additionalPipelineConfigs | default "" | quote }}
+            {{- end }}
             {{- with .Values.config }}
             - name: AGENT_ID
               value: "{{ .agentId }}"
@@ -73,6 +80,10 @@ spec:
             {{- end }}
             {{- with .reconnectDelaySeconds }}
             - name: RECONNECT_DELAY_SECONDS
+              value: "{{ . }}"
+            {{- end }}
+            {{- with .dynamicIngestionVersionEnabled }}
+            - name: DYNAMIC_INGESTION_VERSION_ENABLED
               value: "{{ . }}"
             {{- end }}
             {{- with .ingestionPods }}
