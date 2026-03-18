@@ -10,6 +10,104 @@ Helm chart for deploying the Hybrid Ingestion Runner.
 - Grafana Dashboard using Grafana Operator
 - ECR Registry Helper for AWS authentication
 - Optional Argo Workflows integration
+- OpenShift / ROSA support
+
+## Installing on OpenShift / ROSA
+
+### Prerequisites
+
+- ROSA or OpenShift cluster with `oc` CLI configured
+- Helm 3 installed
+- AWS CLI configured with credentials that can authenticate to ECR
+
+### 1. Add the Argo Helm repo and build dependencies
+
+```bash
+helm repo add argo https://argoproj.github.io/argo-helm
+helm dependency build ./charts/hybrid-ingestion-runner
+```
+
+### 2. Create the namespace
+
+```bash
+oc new-project hybrid-ingestion-runner
+```
+
+### 3. Create the ECR pull secret
+
+ECR tokens expire after 12 hours. Create the secret manually using the AWS CLI:
+
+```bash
+NAMESPACE="hybrid-ingestion-runner"
+AWS_REGION="eu-west-1"
+AWS_ACCOUNT="118146679784"
+ECR_REGISTRY="${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+
+kubectl create secret docker-registry omd-registry-credentials \
+  --docker-server="$ECR_REGISTRY" \
+  --docker-username=AWS \
+  --docker-password="$(aws ecr get-login-password --region $AWS_REGION)" \
+  --namespace="$NAMESPACE"
+```
+
+To refresh the token before it expires (safe to re-run):
+
+```bash
+kubectl create secret docker-registry omd-registry-credentials \
+  --docker-server="$ECR_REGISTRY" \
+  --docker-username=AWS \
+  --docker-password="$(aws ecr get-login-password --region $AWS_REGION)" \
+  --namespace="$NAMESPACE" \
+  --dry-run=client -o yaml | kubectl apply -f -
+```
+
+### 4. Install using the rosa-values.yaml
+
+Edit `rosa-values.yaml` and set your Collate credentials:
+
+```yaml
+config:
+  agentId: "RemoteRunner"        # unique identifier for this runner
+  authToken: "your-auth-token"   # Collate auth token
+  serverHost: "your-cluster.getcollate.io"
+```
+
+Then install:
+
+```bash
+helm upgrade --install hybrid-ingestion-runner \
+  ./charts/hybrid-ingestion-runner \
+  --namespace hybrid-ingestion-runner \
+  -f rosa-values.yaml
+```
+
+### OpenShift SCC compatibility
+
+OpenShift's `restricted-v2` SCC rejects pods that set a specific `runAsUser`, `fsGroup`, or `seccompProfile` — it assigns a UID from its own allowed range automatically. Setting `openshift.enabled: true` in your values instructs the chart to omit those fields:
+
+```yaml
+openshift:
+  enabled: true
+```
+
+This causes the deployment to render only the fields that are compatible with `restricted-v2`:
+
+```yaml
+# pod level
+securityContext:
+  runAsNonRoot: true
+
+# container level
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop: [ALL]
+  runAsNonRoot: true
+```
+
+### ECR Registry Helper on OpenShift
+
+The built-in `ecrRegistryHelper` CronJob uses the `heyvaldemar/aws-kubectl` image which requires root and is blocked by OpenShift SCCs. It is disabled in `rosa-values.yaml`. Refresh the `omd-registry-credentials` secret manually using the command in step 3, or schedule it externally.
 
 ## Grafana Dashboard
 
