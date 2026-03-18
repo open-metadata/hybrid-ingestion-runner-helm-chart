@@ -17,6 +17,10 @@ spec:
       labels:
         {{- include "hybrid-ingestion-runner.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: ecr-registry-helper
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
       serviceAccountName: {{ include "ecr-registry-helper.serviceAccountName" . }}
       restartPolicy: Never

@@ -4,6 +4,10 @@ metadata:
   name: {{ include "hybrid-ingestion-runner.fullname" . }}
   labels:
     {{- include "hybrid-ingestion-runner.labels" . | nindent 4 }}
+  {{- with .Values.deploymentAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:

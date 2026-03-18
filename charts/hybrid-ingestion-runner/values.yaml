@@ -10,6 +10,9 @@ imagePullSecrets: []
 extraEnvs: []
 # Additional envFrom entries for the hybrid runner container
 envFrom: []
+commonLabels: {}
+deploymentAnnotations: {}
+podAnnotations: {}
 service:
   type: ClusterIP
   port: 8585
