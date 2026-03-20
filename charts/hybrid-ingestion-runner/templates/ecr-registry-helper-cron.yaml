@@ -17,6 +17,10 @@ spec:
         metadata:
           labels:
             {{- include "hybrid-ingestion-runner.selectorLabels" . | nindent 12 }}
+          {{- with .Values.podAnnotations }}
+          annotations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
         spec:
           restartPolicy: OnFailure
           serviceAccountName: {{ include "ecr-registry-helper.serviceAccountName" . }}

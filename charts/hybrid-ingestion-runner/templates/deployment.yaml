@@ -4,6 +4,10 @@ metadata:
   name: {{ include "hybrid-ingestion-runner.fullname" . }}
   labels:
     {{- include "hybrid-ingestion-runner.labels" . | nindent 4 }}
+  {{- with .Values.deploymentAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -30,11 +34,23 @@ spec:
       {{- end }}
       serviceAccountName: {{ include "hybrid-ingestion-runner.serviceAccountName" . }}
       securityContext:
+        {{- if .Values.openshift.enabled }}
+        runAsNonRoot: true
+        {{- else }}
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+        {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
+            {{- if .Values.openshift.enabled }}
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            runAsNonRoot: true
+            {{- else }}
             {{- toYaml .Values.securityContext | nindent 12 }}
+            {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
