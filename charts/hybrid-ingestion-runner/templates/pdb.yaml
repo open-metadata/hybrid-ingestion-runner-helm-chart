@@ -1,0 +1,31 @@
+{{- if .Values.podDisruptionBudget.enabled }}
+{{- $pdb := .Values.podDisruptionBudget -}}
+{{- $hasMinAvailable := and (hasKey $pdb "minAvailable") (ne (toString $pdb.minAvailable) "") -}}
+{{- $hasMaxUnavailable := and (hasKey $pdb "maxUnavailable") (ne (toString $pdb.maxUnavailable) "") -}}
+{{- if and $hasMinAvailable $hasMaxUnavailable }}
+{{- fail "Only one of podDisruptionBudget.minAvailable or podDisruptionBudget.maxUnavailable can be set" }}
+{{- end }}
+{{- if not (or $hasMinAvailable $hasMaxUnavailable) }}
+{{- fail "Set one of podDisruptionBudget.minAvailable or podDisruptionBudget.maxUnavailable when podDisruptionBudget.enabled is true" }}
+{{- end }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "hybrid-ingestion-runner.fullname" . }}
+  labels:
+    {{- include "hybrid-ingestion-runner.labels" . | nindent 4 }}
+  {{- with $pdb.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "hybrid-ingestion-runner.selectorLabels" . | nindent 6 }}
+  {{- if $hasMinAvailable }}
+  minAvailable: {{ $pdb.minAvailable }}
+  {{- end }}
+  {{- if $hasMaxUnavailable }}
+  maxUnavailable: {{ $pdb.maxUnavailable }}
+  {{- end }}
+{{- end }}

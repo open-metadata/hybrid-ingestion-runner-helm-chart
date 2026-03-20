@@ -10,7 +10,11 @@ imagePullSecrets: []
 extraEnvs: []
 # Additional envFrom entries for the hybrid runner container
 envFrom: []
+commonLabels: {}
+deploymentAnnotations: {}
+podAnnotations: {}
 service:
+  type: ClusterIP
   port: 8585
   metricsPort: 8989
 config:
@@ -31,6 +35,8 @@ config:
   secretsManager: "kubernetes"
   # The delay between reconnection attempts
   # reconnectDelaySeconds: "5"
+  # Enable dynamic ingestion version resolution
+  # dynamicIngestionVersionEnabled: "true"
   # The following section applies for Argo Workflows configuration
   ingestionPods:
     # Ingestion Pods' namespace default value is the Helm Chart namespace
@@ -46,7 +52,7 @@ config:
       create: true
       name: "ingestion"
       # annotations: {}
-      # automount: true
+      automount: true
     # customerToleration: ""
     # If `false`, we will disable the Service Account automount and pass it by hand (argo workflows internally will handle this)
     # autoMountSAToken: ""
@@ -68,6 +74,10 @@ config:
         memory: "256Mi"
     # Pass any extra environment variables to the running pods, as `[key1:value1,key2:value2,...]`
     extraEnvs: []
+    # Additional pipeline type configs as a JSON string
+    # Example:
+    # additionalPipelineConfigs: '{"automation":{"priorityClassName":"high-priority"}}'
+    additionalPipelineConfigs: ""
   argoWorkflows:
     # The endpoint (host:port) of the Argo Workflows server
     endpoint: ""
@@ -81,6 +91,19 @@ serviceAccount:
   create: true
   annotations: {}
   automount: true
+# Set to true when deploying on OpenShift / ROSA.
+# Omits runAsUser, fsGroup, and seccompProfile from security contexts,
+# which are rejected by OpenShift's restricted-v2 SCC. OpenShift assigns
+# a UID from its allowed range automatically.
+openshift:
+  enabled: false
+podDisruptionBudget:
+  enabled: false
+  # Optionally add annotations to the PodDisruptionBudget resource
+  annotations: {}
+  # Set either minAvailable or maxUnavailable, but not both
+  # minAvailable: 1
+  maxUnavailable: 1
 # Service monitor for Prometheus metrics
 serviceMonitor:
   enabled: false
