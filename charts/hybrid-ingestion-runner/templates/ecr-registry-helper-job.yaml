@@ -50,4 +50,16 @@ spec:
               echo "Deleted existing secret (if any) at $(date)" &&
               kubectl create secret docker-registry $DOCKER_SECRET_NAME --docker-server=$DOCKER_REGISTRY --docker-username=AWS --docker-password=$ECR_TOKEN --namespace=$NAMESPACE_NAME &&
               echo "Secret was successfully updated at $(date)"
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
 {{- end }}
