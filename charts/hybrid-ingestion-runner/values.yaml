@@ -78,6 +78,19 @@ config:
     # Example:
     # additionalPipelineConfigs: '{"automation":{"priorityClassName":"high-priority"}}'
     additionalPipelineConfigs: ""
+    # customConfig:
+    #  enabled: false
+    #  containerParams:
+    #    env:
+    #      - name: CUSTOM_ENV
+    #        value: "custom_value"
+    #  workflowParams:
+    #    tolerations:
+    #      - effect: NoSchedule
+    #        key: dedicated
+    #        operator: Equal
+    #        value: dedicated-node-group
+    # 
   argoWorkflows:
     # The endpoint (host:port) of the Argo Workflows server
     endpoint: ""
