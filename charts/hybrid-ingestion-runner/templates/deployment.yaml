@@ -111,9 +111,11 @@ spec:
             - name: INGESTION_DISABLE_VERSION_VALIDATION
               value: "{{ .disableVersionValidation }}"
             {{- end }}
-            {{- with .customerToleration }}
-            - name: INGESTION_CUSTOMER_TOLERATION
-              value: "{{ . }}"
+            {{- if (.customConfig).enabled }}
+            - name: ARGO_INGESTION_CONTAINER_SPEC_FILE_PATH
+              value: "/custom-config/container-params.yaml"
+            - name: ARGO_INGESTION_WORKFLOW_SPEC_FILE_PATH
+              value: "/custom-config/workflow-params.yaml"
             {{- end }}
             {{- with .imagePullSecrets }}
             - name: INGESTION_IMAGE_PULL_SECRETS
@@ -205,12 +207,26 @@ spec:
             {{- toYaml .Values.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- with .Values.volumeMounts }}
+          {{- if or .Values.volumeMounts (((.Values.config).ingestionPods).customConfig).enabled }}
           volumeMounts:
-            {{- toYaml . | nindent 12 }}
           {{- end }}
-      {{- with .Values.volumes }}
+            {{- if (((.Values.config).ingestionPods).customConfig).enabled }}
+              - name: ingestion-config
+                mountPath: /custom-config
+                readOnly: true
+            {{- end }}
+            {{- with .Values.volumeMounts }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+      {{- if or .Values.volumes (((.Values.config).ingestionPods).customConfig).enabled }}
       volumes:
+      {{- end }}
+      {{- if (((.Values.config).ingestionPods).customConfig).enabled }}
+        - name: ingestion-config
+          configMap:
+            name: {{ include "hybrid-ingestion-runner.fullname" . }}-ingestion-config
+      {{- end }}
+      {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.nodeSelector }}

@@ -1,0 +1,14 @@
+{{- if ((.Values.config.ingestionPods).customConfig).enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "hybrid-ingestion-runner.fullname" . }}-ingestion-config
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    {{- include "hybrid-ingestion-runner.labels" . | nindent 4 }}
+data:
+  container-params.yaml: |
+    {{- toYaml (((.Values.config.ingestionPods).customConfig).containerParams | default dict) | nindent 4 }}
+  workflow-params.yaml: |
+    {{- toYaml (((.Values.config.ingestionPods).customConfig).workflowParams | default dict) | nindent 4 }}
+{{- end }}
