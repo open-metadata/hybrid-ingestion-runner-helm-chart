@@ -24,6 +24,28 @@ entries:
     - https://github.com/open-metadata/hybrid-ingestion-runner-helm-chart/releases/download/hybrid-ingestion-runner-1.13.0/hybrid-ingestion-runner-1.13.0.tgz
     version: 1.13.0
   - apiVersion: v2
+    appVersion: 1.12.12
+    created: "2026-06-25T07:31:30.347012996Z"
+    dependencies:
+    - alias: argoWorkflows
+      condition: installArgoWorkflows
+      name: argo-workflows
+      repository: https://argoproj.github.io/argo-helm
+      tags:
+      - argo-workflows
+      version: 0.45.26
+    description: Helm chart to deploy the Collate Hybrid Ingestion Runner on Kubernetes
+    digest: ff7355d6796d5736e51c4254ec3ff7af17143d959468cb39ca35d18d3fb16a06
+    icon: https://open-metadata.org/assets/favicon.png
+    maintainers:
+    - email: support@open-metadata.org
+      name: OpenMetadata
+    name: hybrid-ingestion-runner
+    type: application
+    urls:
+    - https://github.com/open-metadata/hybrid-ingestion-runner-helm-chart/releases/download/hybrid-ingestion-runner-1.12.12/hybrid-ingestion-runner-1.12.12.tgz
+    version: 1.12.12
+  - apiVersion: v2
     appVersion: 1.12.11
     created: "2026-06-08T15:48:58.810883969Z"
     dependencies:
@@ -1311,4 +1333,4 @@ entries:
     urls:
     - https://github.com/open-metadata/hybrid-ingestion-runner-helm-chart/releases/download/hybrid-ingestion-runner-0.0.1/hybrid-ingestion-runner-0.0.1.tgz
     version: 0.0.1
-generated: "2026-06-08T16:54:15.715469417Z"
+generated: "2026-06-25T07:31:30.347381432Z"
