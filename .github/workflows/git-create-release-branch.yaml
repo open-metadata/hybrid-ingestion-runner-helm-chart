@@ -57,10 +57,12 @@ jobs:
         NEW_VERSION: ${{ inputs.mode == 'commit-version-bump' && inputs.version || inputs.release_branch_name }}
       run: |
         old_version=$(cat ../../.version)
+        old_re=$(printf '%s' "$old_version" | sed 's/\./\\./g')
 
-        # update flat version file and README
+        # update flat version file and README (dot-escaped + boundary-guarded so a
+        # two-segment old version like 2.0 can't match inside unrelated numbers)
         echo "$NEW_VERSION" > ../../.version
-        sed -i "s/$old_version/$NEW_VERSION/g" ../../README.md
+        sed -i -E "s/(^|[^0-9A-Za-z.])${old_re}([^0-9A-Za-z.]|\$)/\1${NEW_VERSION}\2/g" ../../README.md
 
         export ingestion_image_version="om-$NEW_VERSION-cl-$NEW_VERSION"
 
