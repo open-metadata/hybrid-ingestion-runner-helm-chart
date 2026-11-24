@@ -112,10 +112,17 @@ spec:
               value: "{{ .disableVersionValidation }}"
             {{- end }}
             {{- if (.customConfig).enabled }}
+            {{- if or $.Values.installArgoWorkflows (ne $.Values.config.argoWorkflows.endpoint "") }}
             - name: ARGO_INGESTION_CONTAINER_SPEC_FILE_PATH
               value: "/custom-config/container-params.yaml"
             - name: ARGO_INGESTION_WORKFLOW_SPEC_FILE_PATH
               value: "/custom-config/workflow-params.yaml"
+            {{- else }}
+            - name: SIMPLEK8S_CONTAINER_SPEC_FILE_PATH
+              value: "/custom-config/container-params.yaml"
+            - name: SIMPLEK8S_POD_SPEC_FILE_PATH
+              value: "/custom-config/workflow-params.yaml"
+            {{- end }}
             {{- end }}
             {{- with .imagePullSecrets }}
             - name: INGESTION_IMAGE_PULL_SECRETS
