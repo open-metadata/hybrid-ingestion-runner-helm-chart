@@ -78,6 +78,10 @@ config:
     # Example:
     # additionalPipelineConfigs: '{"automation":{"priorityClassName":"high-priority"}}'
     additionalPipelineConfigs: ""
+    # Overrides merged into every ingestion pod, with both executors.
+    # containerParams goes into the ingestion container (env, resources, volumeMounts).
+    # workflowParams goes into the Argo WorkflowSpec, or into the pod spec with simpleK8s
+    # (tolerations, nodeSelector, affinity).
     # customConfig:
     #  enabled: false
     #  containerParams:
